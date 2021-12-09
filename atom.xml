@@ -6,7 +6,7 @@
   <link href="https://handsomelv.top/atom.xml" rel="self"/>
   
   <link href="https://handsomelv.top/"/>
-  <updated>2021-07-17T02:41:15.669Z</updated>
+  <updated>2021-12-09T06:59:21.194Z</updated>
   <id>https://handsomelv.top/</id>
   
   <author>
@@ -17,11 +17,28 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>闲时再会</title>
+    <link href="https://handsomelv.top/2021/12/09/going/"/>
+    <id>https://handsomelv.top/2021/12/09/going/</id>
+    <published>2021-12-09T06:57:22.000Z</published>
+    <updated>2021-12-09T06:59:21.194Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p>这半年尤其的快，小站也没时间运营，下一步就是决定在以后的日子里，<del>闲时更新</del>，届时再见！安好</p><span id="more"></span>]]></content>
+    
+    
+    <summary type="html">&lt;p&gt;这半年尤其的快，小站也没时间运营，下一步就是决定在以后的日子里，&lt;del&gt;闲时更新&lt;/del&gt;，届时再见！安好&lt;/p&gt;</summary>
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>LSP协议被劫持解决方法</title>
     <link href="https://handsomelv.top/2021/07/17/Web_Plm/LSP_Plm/"/>
     <id>https://handsomelv.top/2021/07/17/Web_Plm/LSP_Plm/</id>
     <published>2021-07-17T02:11:22.000Z</published>
-    <updated>2021-07-17T02:41:15.669Z</updated>
+    <updated>2021-12-09T06:53:19.402Z</updated>
     
     <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><blockquote><p>事情是这样的：</p><center>就在昨天，学习了一丢丢Java爬虫方面的知识，爬了一下自己的这个小站，结果今天早上起来发现，连上网络之后，某些网站可以访问，某些不可以，啊这，这可就难受了，在网上搜了一下，发现是LSP协议被劫持了</center>解决方法在下面</blockquote><span id="more"></span><blockquote><p>LSP就是 TCP/IP 等协议的接口．LSP用在正途上可以方便程序员们编写监视系统网络通讯情况的Sniffer，可是现在常见的LSP都被用于 浏览器劫持 。 另外，LSP是指一个FEC在MPLS网络中经过的路径称为标签交换路径LSP（Label Switched Path），是从入口到出口的一个单向路径。<br>LSP协议被劫持导致不能上网《传说中的”浏览器劫持”》<br>故障表现:本地连接显示止常，登陆QQ显示网络连接超时，打开浏览器不能显示网页，网络丢包率达到了100%，本地连接数据包收到为0，查杀木马、病毒也不能解决问题。<br>原因分析:Winsock LSP全称Windows Socket Laycred Scrvice Providcr(分层服务提供商)，它是Windows底层网络Socker通信需要经过的大门。一些流氓软件可以把自已加进去，就可以截取、访问、修改网络的数据包，可以随意添加广告，还能获取你的浏览习惯.如果加进的是木马，后果可想而知。而且因LSP工.作在底层，所以无论你用什么浏览器，都逃不了经过它。而LSP中的dll文件被删除后，就会出现无法上网的情况。</p></blockquote><h2 id="检测工具直接修复"><a href="#检测工具直接修复" class="headerlink" title="检测工具直接修复"></a>检测工具直接修复</h2><blockquote><p>首先，360和火绒等主流电脑管家工具中都有相关功能.<br>使用360急救箱网络修复或360安全卫士LSP修复功能来修复（如果提示你的“LSP没有异常，不用修复”，但是你还是上不了网，执行ping命令，在ip地址处会出现（无法ping通外网。那么你就用360的“恢复Winsock LSP到初始状态”的功能。）<br>用LSPFix这个工具在断开网络下修复。<br>火绒则是在“安全工具”-&gt;“断网修复”，进行全面检查，在检查出LSP协议被劫持后，点击修复即可。</p></blockquote><h2 id="命令行工具修复"><a href="#命令行工具修复" class="headerlink" title="命令行工具修复"></a>命令行工具修复</h2><blockquote><p>Windows XP Service Pack 2 中有两个新增的 Netsh 命令。<br>“ netsh winsock reset catalog   该命令将 Winsock 目录重置为默认配置。如果安装了可导致网络连接丢失的不正确的 LSP，该命令会很有用。尽管使用该命令可以还原网络连接，但应该慎重使用，因为以前安装的 LSP 都将需要重新安装。” netsh winsock show catalog   该命令会显示安装在计算机上的 Winsock LSP 列表</p></blockquote><h2 id="重装网卡驱动"><a href="#重装网卡驱动" class="headerlink" title="重装网卡驱动"></a>重装网卡驱动</h2><blockquote><p>在完成上述操作后，如果还是无法上网，建议重装一下电脑网卡驱动（本人是需要这一步。</p></blockquote><h2 id="重新联网"><a href="#重新联网" class="headerlink" title="重新联网"></a>重新联网</h2><blockquote><p>最后，重置一下网络连接，也就是重新联网。</p></blockquote>]]></content>
     
