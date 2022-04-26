@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="晗涩LV"><meta name="copyright" content="晗涩LV"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>CSS 学习第4天 | 晗涩LV的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><link class="aplayer-style-marker" rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.css"><script class="aplayer-script-marker" src="https://cdn.jsdelivr.net/npm/aplayer@latest/dist/APlayer.min.js" defer></script><script class="meting-script-marker" src="https://cdn.jsdelivr.net/npm/meting@1/dist/Meting.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"handsomelv.top","root":"/","title":"晗涩小屋LV","version":"1.8.11","mode":"time","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["255, 215, 0","255, 0, 0","255, 97, 0","0, 0, 255","0, 255, 0","0, 255, 255","160, 32, 240"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom.xml" title="晗涩LV的小站" type="application/atom+xml"><script src="/" async></script><script src="/j" async></script><script src="/s" async></script><script src="/" async></script><script src="/D" async></script><script src="/i" async></script><script src="/g" async></script><script src="/i" async></script><script src="/t" async></script><script src="/a" async></script><script src="/l" async></script><script src="/R" async></script><script src="/a" async></script><script src="/i" async></script><script src="/n" async></script><script src="/." async></script><script src="/j" async></script><script src="/s" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="CSS浮动清除浮动总结 父级没高度 子盒子浮动 影响下面布局  PS切图图层切图 右击图层-&gt;快读导出；合并图层ctrl+e  切片切图 切片工具，导出，存储为web所用格式，选中的切片  Cutterman cutterman工具 - 最好用的切图工具  书写习惯  布局定位属性：display &#x2F; position &#x2F; float &#x2F; clear &#x2F; visibility &#x2F; overf">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CSS 学习第4天">
+<meta property="og:url" content="https://handsomelv.top/2022/04/26/Web_Learn/CSS_Learn/CSS04/index.html">
+<meta property="og:site_name" content="晗涩LV的小站">
+<meta property="og:description" content="CSS浮动清除浮动总结 父级没高度 子盒子浮动 影响下面布局  PS切图图层切图 右击图层-&gt;快读导出；合并图层ctrl+e  切片切图 切片工具，导出，存储为web所用格式，选中的切片  Cutterman cutterman工具 - 最好用的切图工具  书写习惯  布局定位属性：display &#x2F; position &#x2F; float &#x2F; clear &#x2F; visibility &#x2F; overf">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-04-26T13:12:30.000Z">
+<meta property="article:modified_time" content="2022-04-26T13:16:27.676Z">
+<meta property="article:author" content="晗涩LV">
+<meta property="article:tag" content="H5-Css">
+<meta name="twitter:card" content="summary"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="晗涩LV"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="晗涩LV"><span class="site-author-status" title="Master sex.">🤨</span></a><div class="site-author-name"><a href="/about/">晗涩LV</a></div><a class="site-name" href="/about/site.html">晗涩LV的小站</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="主页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">18</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">8</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2775085562&amp;site=qq&amp;menu=yes" title="QQ 2775085562" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/handsome-lv" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/7197970040" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/436910603" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/HANDSME_L" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友人帐" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="女孩子" style="color:HotPink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a><a class="links-item hty-icon-button" href="/tools/" title="在线工具" style="color:#00FF00"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a><a class="links-item hty-icon-button" href="/websites/" title="便捷网站" style="color:#DBA901"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-external-link-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#CSS%E6%B5%AE%E5%8A%A8"><span class="toc-number">1.</span> <span class="toc-text">CSS浮动</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B8%85%E9%99%A4%E6%B5%AE%E5%8A%A8%E6%80%BB%E7%BB%93"><span class="toc-number">1.1.</span> <span class="toc-text">清除浮动总结</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#PS%E5%88%87%E5%9B%BE"><span class="toc-number">2.</span> <span class="toc-text">PS切图</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9B%BE%E5%B1%82%E5%88%87%E5%9B%BE"><span class="toc-number">2.1.</span> <span class="toc-text">图层切图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%87%E7%89%87%E5%88%87%E5%9B%BE"><span class="toc-number">2.2.</span> <span class="toc-text">切片切图</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Cutterman"><span class="toc-number">2.3.</span> <span class="toc-text">Cutterman</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B9%A6%E5%86%99%E4%B9%A0%E6%83%AF"><span class="toc-number">3.</span> <span class="toc-text">书写习惯</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CSS%E5%AE%9A%E4%BD%8D%EF%BC%88%E6%AF%92%E7%98%A4%E5%B9%BF%E5%91%8A%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">CSS定位（毒瘤广告）</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8E%9F%E5%9B%A0"><span class="toc-number">4.1.</span> <span class="toc-text">原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E7%BB%84%E6%88%90"><span class="toc-number">4.2.</span> <span class="toc-text">定位组成</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E6%A8%A1%E5%BC%8F"><span class="toc-number">4.2.1.</span> <span class="toc-text">定位模式</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%BE%B9%E5%81%8F%E7%A7%BB"><span class="toc-number">4.2.2.</span> <span class="toc-text">边偏移</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D"><span class="toc-number">4.3.</span> <span class="toc-text">定位</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E5%AE%9A%E4%BD%8D"><span class="toc-number">4.3.1.</span> <span class="toc-text">静态定位</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%9B%B8%E5%AF%B9%E5%AE%9A%E4%BD%8D%EF%BC%88%E9%99%90%E5%88%B6%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D%EF%BC%89"><span class="toc-number">4.3.2.</span> <span class="toc-text">相对定位（限制绝对定位）</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D"><span class="toc-number">4.3.3.</span> <span class="toc-text">绝对定位</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E5%AE%9A%E4%BD%8D"><span class="toc-number">4.3.4.</span> <span class="toc-text">固定定位</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%B2%98%E6%80%A7%E5%AE%9A%E4%BD%8D"><span class="toc-number">4.3.5.</span> <span class="toc-text">粘性定位</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">4.3.6.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E5%8F%A0%E6%94%BE%E6%AC%A1%E5%BA%8F"><span class="toc-number">4.4.</span> <span class="toc-text">定位叠放次序</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E6%8B%93%E5%B1%95"><span class="toc-number">4.5.</span> <span class="toc-text">定位拓展</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BB%9D%E5%AF%B9%E5%AE%9A%E4%BD%8D%E7%9B%92%E5%AD%90%E5%B1%85%E4%B8%AD"><span class="toc-number">4.5.1.</span> <span class="toc-text">绝对定位盒子居中</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%AE%9A%E4%BD%8D%E7%89%B9%E6%AE%8A%E5%B1%9E%E6%80%A7"><span class="toc-number">4.5.2.</span> <span class="toc-text">定位特殊属性</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://handsomelv.top/2022/04/26/Web_Learn/CSS_Learn/CSS04/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="晗涩LV"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="晗涩LV的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">CSS 学习第4天</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-04-26 21:12:30" itemprop="dateCreated datePublished" datetime="2022-04-26T21:12:30+08:00">2022-04-26</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">1.1k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">4m</span></span></span><span class="post-busuanzi"><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读次数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg> <span id="busuanzi_value_page_pv"></span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/OUT-LEARN/" style="--text-color:#F5A9F2" itemprop="url" rel="index"><span itemprop="text">OUT_LEARN</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/H5-Css/" style="--text-color:#31B404"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">H5-Css</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h4 id="CSS浮动"><a href="#CSS浮动" class="headerlink" title="CSS浮动"></a>CSS浮动</h4><h5 id="清除浮动总结"><a href="#清除浮动总结" class="headerlink" title="清除浮动总结"></a>清除浮动总结</h5><ul>
+<li>父级没高度</li>
+<li>子盒子浮动</li>
+<li>影响下面布局</li>
+</ul>
+<h4 id="PS切图"><a href="#PS切图" class="headerlink" title="PS切图"></a>PS切图</h4><h5 id="图层切图"><a href="#图层切图" class="headerlink" title="图层切图"></a>图层切图</h5><blockquote>
+<p>右击图层-&gt;快读导出；合并图层<code>ctrl+e</code></p>
+</blockquote>
+<h5 id="切片切图"><a href="#切片切图" class="headerlink" title="切片切图"></a>切片切图</h5><blockquote>
+<p>切片工具，导出，存储为web所用格式，选中的切片</p>
+</blockquote>
+<h5 id="Cutterman"><a href="#Cutterman" class="headerlink" title="Cutterman"></a>Cutterman</h5><blockquote>
+<p><a target="_blank" rel="noopener" href="https://www.cutterman.cn/zh/cutterman">cutterman</a>工具 - 最好用的切图工具</p>
+</blockquote>
+<h4 id="书写习惯"><a href="#书写习惯" class="headerlink" title="书写习惯"></a>书写习惯</h4><blockquote>
+<ol>
+<li>布局定位属性：<code>display / position / float / clear / visibility / overflow</code></li>
+<li>自身属性：<code>width / height / margin / padding / border / background</code></li>
+<li>文本属性：<code>color / font / text-decoration / text-align / vettical-align / white-space / break-word</code></li>
+<li>其他属性(CSS3)：<code>content / cursor / border-radius / box-shadow / text-shadow </code></li>
+</ol>
+</blockquote>
+<h4 id="CSS定位（毒瘤广告）"><a href="#CSS定位（毒瘤广告）" class="headerlink" title="CSS定位（毒瘤广告）"></a>CSS定位（毒瘤广告）</h4><h5 id="原因"><a href="#原因" class="headerlink" title="原因"></a>原因</h5><blockquote>
+<p>定位可以让盒子自由的在某个盒子内移动位置或者固定屏幕中某个位置，并且可以压住其他盒子</p>
+</blockquote>
+<h5 id="定位组成"><a href="#定位组成" class="headerlink" title="定位组成"></a>定位组成</h5><blockquote>
+<p><strong>定位</strong>：将盒子定在某个位置，所以定位也就是摆放盒子，按照定位的方式移动盒子</p>
+<p>定位= 定位模式 + 边偏移</p>
+<p><code>定位模式用于指定一个元素在文档中的定位方式，边偏移决定了该元素的最终位置</code></p>
+</blockquote>
+<h6 id="定位模式"><a href="#定位模式" class="headerlink" title="定位模式"></a>定位模式</h6><blockquote>
+<p>css中的<code>position</code> 属性设置</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th><code>static</code></th>
+<th>静态定位</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>relative</code></td>
+<td>相对定位</td>
+</tr>
+<tr>
+<td><code>absolute</code></td>
+<td>绝对定位</td>
+</tr>
+<tr>
+<td><code>fixed</code></td>
+<td>固定定位</td>
+</tr>
+</tbody></table>
+<h6 id="边偏移"><a href="#边偏移" class="headerlink" title="边偏移"></a>边偏移</h6><blockquote>
+<p>边偏移就是定位的盒子移动到最终位置；</p>
+<p>有 <code>top | bottom | left | right</code> 4个属性</p>
+</blockquote>
+<h5 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h5><p><em><strong>子绝父相</strong></em></p>
+<blockquote>
+<p>相对定位经常用来作为绝对定位的父级</p>
+<p>总结：因为父级需要占有位置，子盒子不需要占有位置</p>
+</blockquote>
+<h6 id="静态定位"><a href="#静态定位" class="headerlink" title="静态定位"></a>静态定位</h6><blockquote>
+<p><strong><code>选择器 &#123; position : static ;&#125;</code></strong></p>
+<ul>
+<li>静态定位按照标准流特性摆放位置，没有边偏移</li>
+</ul>
+</blockquote>
+<h6 id="相对定位（限制绝对定位）"><a href="#相对定位（限制绝对定位）" class="headerlink" title="相对定位（限制绝对定位）"></a>相对定位（限制绝对定位）</h6><blockquote>
+<p>相对定位在元素移动时，是相对于原来的位置来说的</p>
+<p><strong><code>选择器 &#123;position : relative;&#125;</code></strong></p>
+<p><em><strong>虽然相对位置移动，但不脱标，原来的位置仍然保留</strong></em></p>
+</blockquote>
+<h6 id="绝对定位"><a href="#绝对定位" class="headerlink" title="绝对定位"></a>绝对定位</h6><blockquote>
+<p>绝对定位是元素在移动时，相对与它祖先元素来说的</p>
+<p><strong><code>选择器 &#123;position : absolute;&#125;</code></strong></p>
+<ul>
+<li>如果<strong>没有祖先元素</strong>或者<strong>祖先元素没有定位</strong>，则以浏览器（整个文档）为准定位</li>
+<li>如果父元素有定位（相对，绝对，固定定位），则以最近一级的有定位父元素为参考点移动位置</li>
+<li>绝对定位不再占有原先的位置 <strong>（脱标）</strong></li>
+</ul>
+</blockquote>
+<h6 id="固定定位"><a href="#固定定位" class="headerlink" title="固定定位"></a>固定定位</h6><blockquote>
+<p>固定定位是元素固定于浏览器可视区的位置</p>
+<p><strong><code>选择器 &#123;position : fixed;&#125;</code></strong></p>
+<ul>
+<li>以浏览器的可视窗口为参照点移动元素</li>
+<li>跟父元素没有关系</li>
+</ul>
+</blockquote>
+<h6 id="粘性定位"><a href="#粘性定位" class="headerlink" title="粘性定位"></a>粘性定位</h6><blockquote>
+<p>粘性定位可以被认为是相对定位和固定定位的混合</p>
+<p><strong><code>选择器 &#123;position : sticky; top: 10px&#125;</code></strong></p>
+<ul>
+<li>以浏览器的可视窗口为参照点移动元素（固定定位）</li>
+<li>粘性定位占有原先的位置（相对定位）</li>
+<li>必须添加<code>top、left、right、bottom</code>其中一个才有效</li>
+</ul>
+</blockquote>
+<h6 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h6><table>
+<thead>
+<tr>
+<th>定位模式</th>
+<th>是否脱标</th>
+<th>移动位置</th>
+<th>是否常用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>static</code>静态定位</td>
+<td>否</td>
+<td>不能使用边偏移</td>
+<td>很少</td>
+</tr>
+<tr>
+<td><code>relative</code>相对定位</td>
+<td>否（占有位置）</td>
+<td>相对于自身位置移动</td>
+<td>常用</td>
+</tr>
+<tr>
+<td><code>absolute</code>绝对定位</td>
+<td>是（不占有位置）</td>
+<td>带有定位的父级</td>
+<td>常用</td>
+</tr>
+<tr>
+<td><code>fixed</code>固定定位</td>
+<td>是（不占有位置）</td>
+<td>浏览器可视区</td>
+<td>常用</td>
+</tr>
+<tr>
+<td><code>sticky</code>粘性定位</td>
+<td>否（占有位置）</td>
+<td>浏览器可视区</td>
+<td>当前阶段少</td>
+</tr>
+</tbody></table>
+<h5 id="定位叠放次序"><a href="#定位叠放次序" class="headerlink" title="定位叠放次序"></a>定位叠放次序</h5><blockquote>
+<p><strong><code>z-index</code></strong></p>
+<p>在使用定位布局时，可能会出现盒子重叠的情况，利用<code>z-index</code>来控制盒子的前后次序</p>
+<p><strong><code>选择器 &#123; z-index: 1;&#125;</code></strong></p>
+<ul>
+<li>数值可以是正整数，负整数或0，默认是<code>auto</code>，数值越大，盒子越靠上；</li>
+<li>如果属性值相同，后来者居上</li>
+<li></li>
+</ul>
+</blockquote>
+<h5 id="定位拓展"><a href="#定位拓展" class="headerlink" title="定位拓展"></a>定位拓展</h5><h6 id="绝对定位盒子居中"><a href="#绝对定位盒子居中" class="headerlink" title="绝对定位盒子居中"></a>绝对定位盒子居中</h6><blockquote>
+<p><strong>水平居中</strong></p>
+<p><code>left:50%;</code></p>
+<p><code>margin-left: 宽度一半 px</code></p>
+</blockquote>
+<blockquote>
+<p><strong>垂直居中</strong></p>
+<p><code>top:50%;</code></p>
+<p><code>margin-top: 高度一半 px</code></p>
+</blockquote>
+<h6 id="定位特殊属性"><a href="#定位特殊属性" class="headerlink" title="定位特殊属性"></a>定位特殊属性</h6><blockquote>
+<p><strong>绝对定位和固定定位也和浮动类似</strong></p>
+<ol>
+<li>行内元素添加绝对或者固定定位，可以直接设置高度和宽度</li>
+<li>块级元素添加绝对或固定定位，如果不给宽度或高度，默认大小是内容的大小</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>浮动元素会压住下面标准流的盒子，但是不会压住标准流里的文字图片</p>
+<p>绝对定位（固定定位）会压住下面标准流的所有内容</p>
+<p><em>浮动之所以不会压住文字，因为浮动产生的目的最初是为了做文字环绕效果</em></p>
+</blockquote>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">太穷了太穷了😅😅😅可投喂</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/sponsor/zfb.jpg"><img loading="lazy" src="/images/sponsor/zfb.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a href="/images/sponsor/qq.png"><img loading="lazy" src="/images/sponsor/qq.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a href="/images/sponsor/wx.png"><img loading="lazy" src="/images/sponsor/wx.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>晗涩LV</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://handsomelv.top/2022/04/26/Web_Learn/CSS_Learn/CSS04/" title="CSS 学习第4天">https://handsomelv.top/2022/04/26/Web_Learn/CSS_Learn/CSS04/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/04/25/Web_Learn/CSS_Learn/CSS03/" rel="next" title="CSS 学习第3天"><span class="post-nav-text">CSS 学习第3天</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br><span>可以留下你的信息哦(支持匿名,也可以直接去Github_issues)😀😀😀</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/handsome-lv/handsome-lv.github.io/issues?q=is:issue+CSS 学习第4天">GitHub Issues</a></div><div id="valine-container"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js", () => {
+  const valineConfig = {"enable":true,"appId":"7FQHXArkO0B5lBLzBQV5VKYa-MdYXbMMI","appKey":"wOV2dJicWiDBYhdMunyHXwm5","placeholder":"Just go go","avatar":null,"pageSize":10,"visitor":false,"highlight":true,"recordIP":false,"enableQQ":true,"el":"#valine-container","lang":"zh-cn"}
+  valineConfig.path = "/2022/04/26/Web_Learn/CSS_Learn/CSS04/"
+  new Valine(valineConfig)
+}, window.Valine);</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 晗涩LV</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-04-22T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="想要搜些什么？" value=""></div><div id="local-search-result"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","5-22","12-13"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><div class="aplayer no-destroy" id="aplayer" data-id="7976504515" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay data-theme="#2980b9" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7" data-mutex data-lrctype="0" data-listfolded data-listmaxheight="340px" data-storagename="metingjs"></div></div></body></html>
