@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="晗涩LV"><meta name="copyright" content="晗涩LV"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>集合 | 晗涩LV的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.handsomelv.top","root":"/","title":"晗涩的小站","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["160, 54, 176","33, 55, 184"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom.xml" title="晗涩LV的小站" type="application/atom+xml"><script src="/" async></script><script src="/j" async></script><script src="/s" async></script><script src="/" async></script><script src="/D" async></script><script src="/i" async></script><script src="/g" async></script><script src="/i" async></script><script src="/t" async></script><script src="/a" async></script><script src="/l" async></script><script src="/R" async></script><script src="/a" async></script><script src="/i" async></script><script src="/n" async></script><script src="/." async></script><script src="/j" async></script><script src="/s" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="集合 单列集合：Collection List：可重复 ArrayList LinkedList   Set：不可重复 HashSet TreeSet     双列集合：Map HashMap    CollectionJDK不提供接口实现，提供子接口Set和List实现  add(E e)：添加元素 remove(Object o)：移除元素 clear：清空元素    contains(Obj">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集合">
+<meta property="og:url" content="https://www.handsomelv.top/2022/09/25/Java_Learn/Review/Collection/index.html">
+<meta property="og:site_name" content="晗涩LV的小站">
+<meta property="og:description" content="集合 单列集合：Collection List：可重复 ArrayList LinkedList   Set：不可重复 HashSet TreeSet     双列集合：Map HashMap    CollectionJDK不提供接口实现，提供子接口Set和List实现  add(E e)：添加元素 remove(Object o)：移除元素 clear：清空元素    contains(Obj">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-09-25T00:00:40.000Z">
+<meta property="article:modified_time" content="2022-09-26T10:35:21.674Z">
+<meta property="article:author" content="晗涩LV">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="晗涩LV"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="晗涩LV"><span class="site-author-status" title="Master sex.">🤨</span></a><div class="site-author-name"><a href="/about/">晗涩LV</a></div><a class="site-name" href="/about/site.html">晗涩LV的小站</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="主页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2775085562&amp;site=qq&amp;menu=yes" title="QQ 2775085562" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/handsome-lv" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/7197970040" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/436910603" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/HANDSME_L" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友人帐" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="女孩子" style="color:HotPink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a><a class="links-item hty-icon-button" href="/tools/" title="在线工具" style="color:#00FF00"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a><a class="links-item hty-icon-button" href="/websites/" title="便捷网站" style="color:#DBA901"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-external-link-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%9B%86%E5%90%88"><span class="toc-number">1.</span> <span class="toc-text">集合</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Collection"><span class="toc-number">2.</span> <span class="toc-text">Collection</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%81%8D%E5%8E%86"><span class="toc-number">2.1.</span> <span class="toc-text">遍历</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#List-%E6%9C%89%E5%BA%8F%E5%8F%AF%E9%87%8D%E5%A4%8D"><span class="toc-number">3.</span> <span class="toc-text">List(有序可重复)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E4%BF%AE%E6%94%B9%E5%BC%82%E5%B8%B8"><span class="toc-number">3.1.</span> <span class="toc-text">并发修改异常</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ListIterator-%E5%88%97%E8%A1%A8%E8%BF%AD%E4%BB%A3%E5%99%A8"><span class="toc-number">3.2.</span> <span class="toc-text">ListIterator 列表迭代器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A2%9E%E5%BC%BAfor%E5%BE%AA%E7%8E%AF"><span class="toc-number">3.3.</span> <span class="toc-text">增强for循环</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#List%E9%9B%86%E5%90%88%E5%AD%90%E7%B1%BB"><span class="toc-number">3.4.</span> <span class="toc-text">List集合子类</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Set-%E4%B8%8D%E9%87%8D%E5%A4%8D-%E6%B2%A1%E6%9C%89%E7%B4%A2%E5%BC%95%EF%BC%8C%E4%B8%8D%E8%83%BDfor%E9%81%8D%E5%8E%86"><span class="toc-number">4.</span> <span class="toc-text">Set(不重复)没有索引，不能for遍历</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E5%80%BC"><span class="toc-number">4.1.</span> <span class="toc-text">哈希值</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HashSet"><span class="toc-number">4.2.</span> <span class="toc-text">HashSet</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="toc-number">4.2.1.</span> <span class="toc-text">哈希表</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#LinkedHashSet"><span class="toc-number">4.2.2.</span> <span class="toc-text">LinkedHashSet</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#TreeSet"><span class="toc-number">4.3.</span> <span class="toc-text">TreeSet</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%AF%94%E8%BE%83%E5%99%A8%E6%8E%92%E5%BA%8FComparator"><span class="toc-number">4.3.1.</span> <span class="toc-text">比较器排序Comparator</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">泛型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B%E7%B1%BB"><span class="toc-number">5.1.</span> <span class="toc-text">泛型类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B3%9B%E5%9E%8B%E6%96%B9%E6%B3%95"><span class="toc-number">5.2.</span> <span class="toc-text">泛型方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B1%BB%E5%9E%8B%E9%80%9A%E9%85%8D%E7%AC%A6"><span class="toc-number">5.3.</span> <span class="toc-text">类型通配符</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Map"><span class="toc-number">6.</span> <span class="toc-text">Map</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Collections"><span class="toc-number">7.</span> <span class="toc-text">Collections</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.handsomelv.top/2022/09/25/Java_Learn/Review/Collection/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="晗涩LV"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="晗涩LV的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">集合</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-09-25 08:00:40" itemprop="dateCreated datePublished" datetime="2022-09-25T08:00:40+08:00">2022-09-25</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">1.7k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">6m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Out-Learn/" style="--text-color:#F5A9F2" itemprop="url" rel="index"><span itemprop="text">Out_Learn</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Java/" style="--text-color:#61dafb"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h4 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h4><ul>
+<li>单列集合：Collection<ul>
+<li>List：可重复<ul>
+<li>ArrayList</li>
+<li>LinkedList</li>
+</ul>
+</li>
+<li>Set：不可重复<ul>
+<li>HashSet</li>
+<li>TreeSet</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>双列集合：Map<ul>
+<li>HashMap</li>
+</ul>
+</li>
+</ul>
+<h4 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h4><p>JDK不提供接口实现，提供子接口Set和List实现</p>
+<blockquote>
+<p>add(E e)：添加元素</p>
+<p>remove(Object o)：移除元素</p>
+<p>clear：清空元素    contains(Object o)：判断集合中是否存在指定元素</p>
+<p>isEmpty()：判断集合是否为空    size()：集合长度，也就是集合中元素的个数</p>
+</blockquote>
+<h5 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h5><blockquote>
+<p>Iterator：迭代器，集合的专用遍历方式</p>
+<ul>
+<li>Iterator<E> iterator()：返回此集合中元素的迭代器，通过集合的iterator()方法得到</li>
+<li>迭代器依赖于集合而存在的</li>
+</ul>
+<p>Iterator常用方法：</p>
+<ul>
+<li>E next()：返回迭代中的下一个元素</li>
+<li>boolean hasNext()：如果迭代具有更多元素，返回true</li>
+</ul>
+</blockquote>
+<h4 id="List-有序可重复"><a href="#List-有序可重复" class="headerlink" title="List(有序可重复)"></a>List(有序可重复)</h4><blockquote>
+<p>add(int index,E element)：在集合指定位置插入指定元素</p>
+<p>remove(int index)：删除指定索引处的元素，返回被删除的元素</p>
+<p>set(int index,E element)：修改指定索引处的元素，返回被修改的元素</p>
+<p>get(int index)：返回指定索引处的元素</p>
+</blockquote>
+<h5 id="并发修改异常"><a href="#并发修改异常" class="headerlink" title="并发修改异常"></a>并发修改异常</h5><blockquote>
+<p>并发修改异常：</p>
+<ul>
+<li>ConcurrentModificationException</li>
+</ul>
+<p>产生原因：</p>
+<ul>
+<li>迭代器遍历过程中，通过集合对象修改了集合中元素的长度，造成迭代器获取元素中判断预期修改值和实际修改值不一致</li>
+</ul>
+<p>解决方案</p>
+<ul>
+<li>用for循环遍历，然后用集合对象做对应的操作即可</li>
+</ul>
+</blockquote>
+<h5 id="ListIterator-列表迭代器"><a href="#ListIterator-列表迭代器" class="headerlink" title="ListIterator 列表迭代器"></a>ListIterator 列表迭代器</h5><blockquote>
+<p>ListIterator允许程序员沿任一方向遍历列表，在迭代期间修改列表，并获取当前位置</p>
+<p>ListIterator常用方法：</p>
+<ul>
+<li>E previous()：返回迭代中的上一个元素</li>
+<li>boolean hasPrevious()：如果迭代相反方向具有更多元素，返回true</li>
+<li>add(E e)：将指定的元素插入列表</li>
+</ul>
+</blockquote>
+<h5 id="增强for循环"><a href="#增强for循环" class="headerlink" title="增强for循环"></a>增强for循环</h5><blockquote>
+<p>增强for：简化数组和Collection集合的遍历</p>
+<p>格式：</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">for</span><span class="token punctuation">(</span>元素数据类型 变量名 <span class="token operator">:</span> 数组或<span class="token class-name">Collection</span>集合<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+ <span class="token comment">//在此处使用变量即可，该变量就是元素</span>
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>内部本质是一个Iterator迭代器</p>
+</blockquote>
+<h5 id="List集合子类"><a href="#List集合子类" class="headerlink" title="List集合子类"></a>List集合子类</h5><blockquote>
+<ul>
+<li>ArrayList：底层数据结构是数组，查询快，增删慢</li>
+<li>LinkedList：底层数据结构是链表，查询慢，增删快<ul>
+<li>addFirst|addLast()：在列表开头或结尾增加元素</li>
+<li>getFirst|getLast()：返回第一个或最后一个元素</li>
+<li>removeFirst|removeLast()：删除并返回第一个或最后一个元素</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h4 id="Set-不重复-没有索引，不能for遍历"><a href="#Set-不重复-没有索引，不能for遍历" class="headerlink" title="Set(不重复)没有索引，不能for遍历"></a>Set(不重复)没有索引，不能for遍历</h4><blockquote>
+<p><code>Set&lt;String&gt; set = new HashSet&lt;&gt;()</code> 创建对象</p>
+<p>HashSet：对集合的迭代顺序不做任何保证</p>
+</blockquote>
+<h5 id="哈希值"><a href="#哈希值" class="headerlink" title="哈希值"></a>哈希值</h5><blockquote>
+<p>根据对象的地址或者字符串或数字算出来的int类型的数值</p>
+<p><code>hashCode()</code> 获取对象的哈希值</p>
+<p>默认情况下，不同对象的哈希值是不同的。</p>
+<p>通过方法重写可以实现不同对象哈希值相同</p>
+</blockquote>
+<h5 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h5><blockquote>
+<ul>
+<li>底层数据结构是哈希表</li>
+<li>迭代顺序不做保证</li>
+<li>没有索引方法，不能for循环遍历，可以fori</li>
+<li>不重复</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>HashSet集合保证唯一性原理：</p>
+<p>如果哈希表未初始化，就进行初始化；</p>
+<p>根据对象的哈希值计算对象的存储位置，该位置无元素则存储元素；</p>
+<p>存入元素和之前元素对比哈希值：</p>
+<p>​    不同：继续执行，添加元素到集合</p>
+<p>​    相同：调用对象的equals()方法比较：</p>
+<p>​            false：继续执行，元素添加到集合</p>
+<p>​            true：元素重复，不存储</p>
+</blockquote>
+<p>若要重复：需重写HashCode和equals方法</p>
+<h6 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h6><blockquote>
+<p>元素为链表的数组 </p>
+</blockquote>
+<h6 id="LinkedHashSet"><a href="#LinkedHashSet" class="headerlink" title="LinkedHashSet"></a>LinkedHashSet</h6><blockquote>
+<p>哈希表和链表组成</p>
+</blockquote>
+<h5 id="TreeSet"><a href="#TreeSet" class="headerlink" title="TreeSet"></a>TreeSet</h5><blockquote>
+<p>间接的实现了Set接口；自然排序</p>
+<ul>
+<li>元素按照一定的规则进行排序，具体排序方式取决于构造方法<ul>
+<li>TreeSet()：根据元素自然排序进行排序</li>
+<li>TreeSet(Comparator comparator)：根据指定比较器进行排序</li>
+</ul>
+</li>
+<li>没有带索引的方法，不能使用普通的for循环遍历</li>
+<li>不包含重复元素</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>无参构造方法为自然排序</p>
+<p>让元素所属的类实现Comparable接口，重写compareTo方法</p>
+<p>重写方法时，注意排序规则按照要求的主要条件和次要条件</p>
+</blockquote>
+<h6 id="比较器排序Comparator"><a href="#比较器排序Comparator" class="headerlink" title="比较器排序Comparator"></a>比较器排序Comparator</h6><blockquote>
+<ul>
+<li>用TreeSet集合存储自定义对象，带参构造方法使用比较器排序</li>
+<li>让集合构造方法接收Comparator的实现类对象，重写compare(T o1,T o2)方法</li>
+<li>按照要求的主要次要排序条件</li>
+</ul>
+</blockquote>
+<h4 id="泛型"><a href="#泛型" class="headerlink" title="泛型"></a>泛型</h4><blockquote>
+<p>本质是参数化类型，所操作的数据类型被指定为一个参数</p>
+<p>将类型由原来的具体的类型参数化，然后在使用/调用时传入具体的类型</p>
+</blockquote>
+<blockquote>
+<p>泛型格式：</p>
+<ul>
+<li>&lt;类型&gt;：指定一种类型的格式，看作形参</li>
+<li>&lt;类型1,类型2&gt;：指定多种类型的格式，用逗号隔开，看作形参</li>
+<li>将来具体调用的时候给定的类型可以看成实参，并且实参的类型只能是引用数据类型</li>
+</ul>
+</blockquote>
+<h5 id="泛型类"><a href="#泛型类" class="headerlink" title="泛型类"></a>泛型类</h5><blockquote>
+<ul>
+<li>格式：修饰符 class 类名&lt;类型&gt;{}</li>
+<li>范例：public class Generic<T>{}</li>
+</ul>
+</blockquote>
+<h5 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h5><blockquote>
+<ul>
+<li>格式：修饰符 &lt;类型&gt; 返回值类型 方法名(类型 变量名){ }</li>
+<li>publc <T> void show(T t){ }</li>
+</ul>
+</blockquote>
+<h5 id="类型通配符"><a href="#类型通配符" class="headerlink" title="类型通配符"></a>类型通配符</h5><blockquote>
+<p>为了表示各种泛型List的父类，使用类型通配符</p>
+<ul>
+<li><?></li>
+<li>表示各种类型的泛型的父类</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>通配符上限：&lt;? extend 类型&gt;    表示类型及其子类型</li>
+<li>通配符下限：&lt;? super 类型&gt;      表示类型及其父类型</li>
+</ul>
+</blockquote>
+<h4 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h4><blockquote>
+<p>概述：</p>
+<ul>
+<li>Interface Map&lt;K,V&gt;    K：键的类型；    V：值的类型</li>
+<li>将键映射到值的对象；不能包含重复的键；每个键可以映射到最多一个值</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>put(K key,V value)：添加元素</p>
+<p>remove(Object key)：根据键删除键值对元素</p>
+<p>clear()：移除所有键值对元素</p>
+<p>containsKey(Object Key)：判断集合是否包含指定的键</p>
+<p>containsValue(Object value)：判断集合是否包含指定的值</p>
+<p>isEmpty()：判断集合是否为空</p>
+<p>size()：集合的长度，也就是集合中键值对的个数</p>
+</blockquote>
+<blockquote>
+<p>Map集合的获取功能：</p>
+<ul>
+<li>V get(Object key)    根据键获取值</li>
+<li>Set<K>keySet()    获取所有键的集合</li>
+<li>Collection<V> values()    获取所有值的集合</li>
+<li>Set&lt;Map.Entry&lt;K,V&gt;&gt; entrySet()    获取所有键值对对象的集合</li>
+</ul>
+</blockquote>
+<h4 id="Collections"><a href="#Collections" class="headerlink" title="Collections"></a>Collections</h4><blockquote>
+<p>Collections是针对集合操作的工具类</p>
+<p>常用方法：</p>
+<ul>
+<li>public static &lt;T extends Comparable&lt;? super T&gt;&gt;  void sort(List <T> list)：将指定列表按升序排列</li>
+<li>public static void reverse(List &lt;?&gt; list)：反转指定列表中元素的顺序</li>
+<li>public static void shuffle(List &lt;?&gt; list)：使用默认的随机源随机排序指定的列表</li>
+</ul>
+</blockquote>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">太穷了太穷了😅😅😅可投喂</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/sponsor/zfb.jpg"><img loading="lazy" src="/images/sponsor/zfb.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a href="/images/sponsor/qq.png"><img loading="lazy" src="/images/sponsor/qq.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a href="/images/sponsor/wx.png"><img loading="lazy" src="/images/sponsor/wx.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>晗涩LV</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.handsomelv.top/2022/09/25/Java_Learn/Review/Collection/" title="集合">https://www.handsomelv.top/2022/09/25/Java_Learn/Review/Collection/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/09/25/Java_Learn/Review/IO/" rel="prev" title="IO 流"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">IO 流</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/09/24/Java_Learn/Review/FZ_DT_YC/" rel="next" title="封装 多态 异常"><span class="post-nav-text">封装 多态 异常</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br><span>可以留下你的信息哦(支持匿名,也可以直接去Github_issues)😀😀😀</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/handsome-lv/handsome-lv.github.io/issues?q=is:issue+集合">GitHub Issues</a></div><div id="valine-container"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js", () => {
+  const valineConfig = {"enable":true,"appId":"7FQHXArkO0B5lBLzBQV5VKYa-MdYXbMMI","appKey":"wOV2dJicWiDBYhdMunyHXwm5","placeholder":"说点儿什么吧(●'◡'●)","avatar":null,"pageSize":10,"visitor":false,"highlight":true,"recordIP":false,"enableQQ":true,"el":"#valine-container","lang":"zh-cn"}
+  valineConfig.path = "/2022/09/25/Java_Learn/Review/Collection/"
+  new Valine(valineConfig)
+}, window.Valine);</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 晗涩LV</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.2</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.8.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-04-22T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="想要搜些什么？" value=""></div><div id="local-search-result"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","5-22","12-13"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><div class="aplayer no-destroy" id="aplayer" data-id="7976504515" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay data-theme="#2980b9" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7" data-mutex data-lrctype="0" data-listfolded data-listmaxheight="340px" data-storagename="metingjs"></div></div></body></html>

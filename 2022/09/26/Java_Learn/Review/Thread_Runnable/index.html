@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="晗涩LV"><meta name="copyright" content="晗涩LV"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>线程 | 晗涩LV的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.handsomelv.top","root":"/","title":"晗涩的小站","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["160, 54, 176","33, 55, 184"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom.xml" title="晗涩LV的小站" type="application/atom+xml"><script src="/" async></script><script src="/j" async></script><script src="/s" async></script><script src="/" async></script><script src="/D" async></script><script src="/i" async></script><script src="/g" async></script><script src="/i" async></script><script src="/t" async></script><script src="/a" async></script><script src="/l" async></script><script src="/R" async></script><script src="/a" async></script><script src="/i" async></script><script src="/n" async></script><script src="/." async></script><script src="/j" async></script><script src="/s" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="多线程进程 正在运行的应用程序  系统进行资源分配和调用的独立单位 每个进程都有内存空间和系统资源   线程 进程中的单个顺序控制流，一条执行路径  多线程实现方式继承Thread类  定义一个类继承自Thread类并重写run()方法 创建类对象，启动线程 ：   start()      重写run()方法: run()是用来封装被线程执行的代码   run()和start()区别 run()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程">
+<meta property="og:url" content="https://www.handsomelv.top/2022/09/26/Java_Learn/Review/Thread_Runnable/index.html">
+<meta property="og:site_name" content="晗涩LV的小站">
+<meta property="og:description" content="多线程进程 正在运行的应用程序  系统进行资源分配和调用的独立单位 每个进程都有内存空间和系统资源   线程 进程中的单个顺序控制流，一条执行路径  多线程实现方式继承Thread类  定义一个类继承自Thread类并重写run()方法 创建类对象，启动线程 ：   start()      重写run()方法: run()是用来封装被线程执行的代码   run()和start()区别 run()">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.handsomelv.top/images/posts/Java_Learn/Review/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg">
+<meta property="article:published_time" content="2022-09-26T07:23:40.000Z">
+<meta property="article:modified_time" content="2022-09-26T10:43:28.128Z">
+<meta property="article:author" content="晗涩LV">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.handsomelv.top/images/posts/Java_Learn/Review/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="晗涩LV"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="晗涩LV"><span class="site-author-status" title="Master sex.">🤨</span></a><div class="site-author-name"><a href="/about/">晗涩LV</a></div><a class="site-name" href="/about/site.html">晗涩LV的小站</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="主页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">29</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2775085562&amp;site=qq&amp;menu=yes" title="QQ 2775085562" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/handsome-lv" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/7197970040" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/436910603" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/HANDSME_L" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友人帐" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="女孩子" style="color:HotPink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a><a class="links-item hty-icon-button" href="/tools/" title="在线工具" style="color:#00FF00"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a><a class="links-item hty-icon-button" href="/websites/" title="便捷网站" style="color:#DBA901"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-external-link-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.</span> <span class="toc-text">多线程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">进程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B"><span class="toc-number">1.2.</span> <span class="toc-text">线程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">多线程实现方式</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%A7%E6%89%BFThread%E7%B1%BB"><span class="toc-number">2.1.</span> <span class="toc-text">继承Thread类</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E8%B0%83%E5%BA%A6"><span class="toc-number">2.1.1.</span> <span class="toc-text">线程调度</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6"><span class="toc-number">2.1.2.</span> <span class="toc-text">线程控制</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">2.1.3.</span> <span class="toc-text">线程生命周期</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0Runnable%E6%8E%A5%E5%8F%A3"><span class="toc-number">2.2.</span> <span class="toc-text">实现Runnable接口</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5"><span class="toc-number">3.</span> <span class="toc-text">线程同步</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E4%BB%A3%E7%A0%81%E5%9D%97"><span class="toc-number">3.1.</span> <span class="toc-text">同步代码块</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E6%96%B9%E6%B3%95"><span class="toc-number">3.2.</span> <span class="toc-text">同步方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8"><span class="toc-number">3.3.</span> <span class="toc-text">线程安全</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#Lock%E9%94%81"><span class="toc-number">3.4.</span> <span class="toc-text">Lock锁</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.handsomelv.top/2022/09/26/Java_Learn/Review/Thread_Runnable/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="晗涩LV"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="晗涩LV的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">线程</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-09-26 15:23:40" itemprop="dateCreated datePublished" datetime="2022-09-26T15:23:40+08:00">2022-09-26</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">881</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">3m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Out-Learn/" style="--text-color:#F5A9F2" itemprop="url" rel="index"><span itemprop="text">Out_Learn</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Java/" style="--text-color:#61dafb"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h4 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h4><h5 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h5><blockquote>
+<p>正在运行的应用程序</p>
+<ul>
+<li>系统进行资源分配和调用的独立单位</li>
+<li>每个进程都有内存空间和系统资源</li>
+</ul>
+</blockquote>
+<h5 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h5><blockquote>
+<p>进程中的单个顺序控制流，一条执行路径</p>
+</blockquote>
+<h4 id="多线程实现方式"><a href="#多线程实现方式" class="headerlink" title="多线程实现方式"></a>多线程实现方式</h4><h5 id="继承Thread类"><a href="#继承Thread类" class="headerlink" title="继承Thread类"></a>继承Thread类</h5><blockquote>
+<ul>
+<li>定义一个类继承自Thread类并重写run()方法</li>
+<li>创建类对象，启动线程 ：   <code>start()</code> </li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>重写run()方法:<ul>
+<li>run()是用来封装被线程执行的代码</li>
+</ul>
+</li>
+<li>run()和start()区别<ul>
+<li>run()：封装线程执行的代码，直接调用，相当于普通方法的调用</li>
+<li>start()：启动线程；然后由JVM调用该线程的run()方法</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>设置和获取线程名称</p>
+<ul>
+<li>void setName(String name)：将此线程的名称更改为参数name</li>
+<li>String getName()：返回此线程的名称</li>
+<li>currentThread()：返回对当前正在执行的线程对象的引用</li>
+</ul>
+<p>可选择重写构造方法来对线程进行命名</p>
+</blockquote>
+<h6 id="线程调度"><a href="#线程调度" class="headerlink" title="线程调度"></a>线程调度</h6><blockquote>
+<p>线程具有两种调度模式</p>
+<ul>
+<li>分时调度模型：所有线程轮流使用CPU的使用权，平均分配每个线程占用CPU的时间片</li>
+<li>抢占式调度模型：优先让优先级高的线程使用CPU，如果优先级相同，随机选择。优先级高的线程获取的CPU时间片相对多一些</li>
+</ul>
+<p>Java使用抢占式调度模型</p>
+</blockquote>
+<blockquote>
+<p>Thread类中设置和获取线程优先级：</p>
+<ul>
+<li>getPriority()：返回此线程的优先级</li>
+<li>setPriority(int newPriority)：更改此线程的优先级    MIN-NORM-MAX：1-5-10</li>
+</ul>
+<p>线程优先级高仅仅表示线程获取CPU时间片的几率高，并不是绝对性的优先运行</p>
+</blockquote>
+<h6 id="线程控制"><a href="#线程控制" class="headerlink" title="线程控制"></a>线程控制</h6><blockquote>
+<ul>
+<li>sleep(long millis)：使当前正在执行的线程暂停执行指定的毫秒数</li>
+<li>join()：等待该线程死亡</li>
+<li>setDaemon(boolean on)：将此线程标记为守护线程，当运行的线程都是守护线程时，Java虚拟机将退出</li>
+</ul>
+</blockquote>
+<h6 id="线程生命周期"><a href="#线程生命周期" class="headerlink" title="线程生命周期"></a>线程生命周期</h6><p><img src="/images/posts/Java_Learn/Review/%E7%BA%BF%E7%A8%8B%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="线程生命周期" loading="lazy"></p>
+<h5 id="实现Runnable接口"><a href="#实现Runnable接口" class="headerlink" title="实现Runnable接口"></a>实现Runnable接口</h5><blockquote>
+<ul>
+<li>定义一个类实现Runnable接口，重写run()方法</li>
+<li>创建类对象，创建Thread类对象，把定义类对象作为构造方法的参数</li>
+<li>启动线程</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>好处：</p>
+<ul>
+<li>避免了Java单继承的局限性</li>
+<li>适合多个相同程序的代码去处理同一个资源的情况，把线程和程序的代码、数据有效分离，较好的体现了面向对象的设计思想</li>
+</ul>
+</blockquote>
+<h4 id="线程同步"><a href="#线程同步" class="headerlink" title="线程同步"></a>线程同步</h4><blockquote>
+<p>数据安全问题</p>
+<ul>
+<li>多线程、共享数据、多条语句操作共享数据</li>
+</ul>
+</blockquote>
+<h5 id="同步代码块"><a href="#同步代码块" class="headerlink" title="同步代码块"></a>同步代码块</h5><blockquote>
+<p>锁多条语句操作共享数据</p>
+<pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">synchronized</span><span class="token punctuation">(</span>任意对象<span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+ 多条语句操作共享数据的代码
+<span class="token punctuation">&#125;</span></code></pre>
+</blockquote>
+<h5 id="同步方法"><a href="#同步方法" class="headerlink" title="同步方法"></a>同步方法</h5><blockquote>
+<p>将<code>synchronized</code> 关键字加到方法上</p>
+<pre class="language-java" data-language="java"><code class="language-java">修饰符 <span class="token keyword">synchronized</span> 返回值类型 方法名<span class="token punctuation">(</span> 方法参数 <span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>同步方法锁的对象：<code>this</code> </p>
+</blockquote>
+<blockquote>
+<p>同步静态方法：</p>
+<pre class="language-java" data-language="java"><code class="language-java">修饰符 <span class="token keyword">static</span> <span class="token keyword">synchronized</span> 返回值类型 方法名<span class="token punctuation">(</span> 方法参数 <span class="token punctuation">)</span><span class="token punctuation">&#123;</span>
+
+<span class="token punctuation">&#125;</span></code></pre>
+
+<p>同步静态锁对象：<code>类名.class</code></p>
+</blockquote>
+<h5 id="线程安全"><a href="#线程安全" class="headerlink" title="线程安全"></a>线程安全</h5><blockquote>
+<p>StringBuffer：</p>
+<ul>
+<li>线程安全，可变的字符序列</li>
+</ul>
+<p>Vector：</p>
+<ul>
+<li>该类改进了List接口，Vector被同步。</li>
+<li>不需要线程安全可以使用ArrayList代替Vector</li>
+</ul>
+<p>Hashtable：</p>
+<ul>
+<li>该类实现了一个哈希表，键值映射。任何非null对象都可以作为键或者值</li>
+<li>实现了Map接口，Hashtable被同步。</li>
+<li>不需要线程安全可以选择HashMap代替</li>
+</ul>
+</blockquote>
+<h5 id="Lock锁"><a href="#Lock锁" class="headerlink" title="Lock锁"></a>Lock锁</h5><blockquote>
+<ul>
+<li>lock()：加锁</li>
+<li>unlock()：释放锁</li>
+</ul>
+<p>Lock接口不能直接实例化，采用实现类ReentrantLock来实例化</p>
+<ul>
+<li>ReentrantLock()：创建一个ReentrantLock实例 </li>
+</ul>
+</blockquote>
+</div></section><div id="reward-container"><span class="hty-icon-button button-glow" id="reward-button" title="打赏" onclick="var qr = document.getElementById(&quot;qr&quot;); qr.style.display = (qr.style.display === &quot;none&quot;) ? &quot;block&quot; : &quot;none&quot;;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-hand-coin-line"></use></svg></span><div id="reward-comment">太穷了太穷了😅😅😅可投喂</div><div id="qr" style="display:none;"><div style="display:inline-block"><a href="/images/sponsor/zfb.jpg"><img loading="lazy" src="/images/sponsor/zfb.jpg" alt="支付宝" title="支付宝"></a><div><span style="color:#00A3EE"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-alipay-line"></use></svg></span></div></div><div style="display:inline-block"><a href="/images/sponsor/qq.png"><img loading="lazy" src="/images/sponsor/qq.png" alt="QQ 支付" title="QQ 支付"></a><div><span style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></span></div></div><div style="display:inline-block"><a href="/images/sponsor/wx.png"><img loading="lazy" src="/images/sponsor/wx.png" alt="微信支付" title="微信支付"></a><div><span style="color:#2DC100"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-wechat-pay-line"></use></svg></span></div></div></div></div><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>晗涩LV</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.handsomelv.top/2022/09/26/Java_Learn/Review/Thread_Runnable/" title="线程">https://www.handsomelv.top/2022/09/26/Java_Learn/Review/Thread_Runnable/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/09/25/Java_Learn/Review/IO/" rel="next" title="IO 流"><span class="post-nav-text">IO 流</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br><span>可以留下你的信息哦(支持匿名,也可以直接去Github_issues)😀😀😀</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/handsome-lv/handsome-lv.github.io/issues?q=is:issue+线程">GitHub Issues</a></div><div id="valine-container"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js", () => {
+  const valineConfig = {"enable":true,"appId":"7FQHXArkO0B5lBLzBQV5VKYa-MdYXbMMI","appKey":"wOV2dJicWiDBYhdMunyHXwm5","placeholder":"说点儿什么吧(●'◡'●)","avatar":null,"pageSize":10,"visitor":false,"highlight":true,"recordIP":false,"enableQQ":true,"el":"#valine-container","lang":"zh-cn"}
+  valineConfig.path = "/2022/09/26/Java_Learn/Review/Thread_Runnable/"
+  new Valine(valineConfig)
+}, window.Valine);</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 晗涩LV</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.2</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.8.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-04-22T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="想要搜些什么？" value=""></div><div id="local-search-result"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","5-22","12-13"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><div class="aplayer no-destroy" id="aplayer" data-id="7976504515" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay data-theme="#2980b9" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7" data-mutex data-lrctype="0" data-listfolded data-listmaxheight="340px" data-storagename="metingjs"></div></div></body></html>
