@@ -6,7 +6,7 @@
   <link href="https://www.handsomelv.top/atom.xml" rel="self"/>
   
   <link href="https://www.handsomelv.top/"/>
-  <updated>2022-09-26T10:43:28.128Z</updated>
+  <updated>2022-10-10T01:01:30.725Z</updated>
   <id>https://www.handsomelv.top/</id>
   
   <author>
@@ -15,6 +15,30 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Lambda 函数式编程</title>
+    <link href="https://www.handsomelv.top/2022/10/10/Java_Learn/Review/Lambda/"/>
+    <id>https://www.handsomelv.top/2022/10/10/Java_Learn/Review/Lambda/</id>
+    <published>2022-10-10T01:23:40.000Z</published>
+    <updated>2022-10-10T01:01:30.725Z</updated>
+    
+    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="Lambda表达式"><a href="#Lambda表达式" class="headerlink" title="Lambda表达式"></a>Lambda表达式</h4><blockquote><p>匿名内部类中重写run()方法的代码分析</p><ul><li>方法形参为空，说明调用方法时不需要传递参数</li><li>返回值类型为void，无返回结果</li><li>方法体中的内容是具体要做的事</li></ul><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Runnable</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span>        <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"启动"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    <span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre><p>Lambda表达式代码分析</p><ul><li>()：里面没有内容，形参为空</li><li>-&gt;：用箭头指向后面要做的事情</li><li>{ }：代码块，方法内容</li></ul><pre class="language-java" data-language="java"><code class="language-java"><span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">-></span><span class="token punctuation">&#123;</span>    <span class="token class-name">System</span><span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"启动"</span><span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token punctuation">&#125;</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre></blockquote><blockquote><p>Lambda表达式使用前提</p><ul><li>有一个接口</li><li>接口中有且仅有一个抽象方法</li></ul></blockquote><h4 id="Lambda表达式和匿名内部类区别"><a href="#Lambda表达式和匿名内部类区别" class="headerlink" title="Lambda表达式和匿名内部类区别"></a>Lambda表达式和匿名内部类区别</h4><blockquote><p>所需类型不同</p><ul><li>匿名内部类：可以是接口，也可以是抽象类、具体类</li><li>Lambda表达式：只能是接口</li></ul></blockquote><blockquote><p>使用限制不同</p><ul><li>如果接口中有且仅有一个抽象方法，可以使用Lambda表达式，也可以使用匿名内部类</li><li>如果接口中多于一个抽象方法，只能使用匿名内部类</li></ul></blockquote><blockquote><p>实现原理不同</p><ul><li>匿名内部类：编译之后，产生单独的.class字节码文件</li><li>Lambda表达式：编译之后，没有单独的.class字节码文件。对应的字节码文件运行时动态生成</li></ul></blockquote><h4 id="接口组成更新"><a href="#接口组成更新" class="headerlink" title="接口组成更新"></a>接口组成更新</h4><h5 id="接口默认方法"><a href="#接口默认方法" class="headerlink" title="接口默认方法"></a>接口默认方法</h5><blockquote><p>接口中默认方法的定义格式：</p><ul><li>格式：public default 返回值类型 方法名(参数列表){ }</li></ul><p>注意事项</p><ul><li>默认方法不是抽象方法，所以不强制被重写，但是可以被重写，重写时去掉default关键字</li><li>public 可以省略，default不可以省略</li></ul></blockquote><h5 id="接口静态方法"><a href="#接口静态方法" class="headerlink" title="接口静态方法"></a>接口静态方法</h5><blockquote><p>定义格式：public static 返回值类型 方法名(参数列表){ }</p><p>注意事项：接口中静态方法只能通过接口调用，不能通过接口实现类调用</p></blockquote><h5 id="接口私有方法-jdk9"><a href="#接口私有方法-jdk9" class="headerlink" title="接口私有方法 jdk9"></a>接口私有方法 jdk9</h5><blockquote><p>格式：</p><ul><li>private 返回值类型 方法名(参数列表){ }</li><li>private static 返回值类型 方法名(参数列表){ }</li></ul><p>注意事项：</p><ul><li>默认方法可以调用私有的静态方法和非静态方法</li><li>静态方法只能调用私有的静态方法</li></ul></blockquote><h4 id="方法引用"><a href="#方法引用" class="headerlink" title="方法引用"></a>方法引用</h4><blockquote><p>方法引用符：</p><ul><li>:：该符号为引用运算符，表达式被称为方法引用</li></ul></blockquote><h5 id="引用类方法"><a href="#引用类方法" class="headerlink" title="引用类方法"></a>引用类方法</h5><blockquote><p>引用类的静态方法</p><ul><li>类名 :: 静态方法</li></ul></blockquote><h5 id="引用对象的实例方法"><a href="#引用对象的实例方法" class="headerlink" title="引用对象的实例方法"></a>引用对象的实例方法</h5><blockquote><p>对象 :: 成员方法</p></blockquote><h5 id="引用类的实例方法"><a href="#引用类的实例方法" class="headerlink" title="引用类的实例方法"></a>引用类的实例方法</h5><blockquote><p>类名 :: 成员方法</p></blockquote><h5 id="引用构造器"><a href="#引用构造器" class="headerlink" title="引用构造器"></a>引用构造器</h5><blockquote><p>引用构造方法</p><ul><li>格式：类名 :: new </li></ul></blockquote><h4 id="常用函数式接口"><a href="#常用函数式接口" class="headerlink" title="常用函数式接口"></a>常用函数式接口</h4><h5 id="Supplier接口"><a href="#Supplier接口" class="headerlink" title="Supplier接口"></a>Supplier接口</h5><blockquote><p>Supplier<T>：包含一个无参的方法</p><ul><li>T get()：获得结果</li><li>该方法不需要参数，它会按照某种实现逻辑(由Lambda表达式实现)返回一个数据</li><li>Supplier<T>接口也被称为生产型接口，如果我们指定了接口的泛型是什么类型，那么接口中的get方法就会生产什么类型的数据供我们使用</li></ul></blockquote><h5 id="Consumer接口"><a href="#Consumer接口" class="headerlink" title="Consumer接口"></a>Consumer接口</h5><blockquote><p>Consumer<T>：包含两个方法</p><ul><li>void accept(T t)：对给定的参数执行此操作</li><li>default Consumer<T> andThen(Consumer after)：返回一个组合的Consumer，依次执行此操作，然后执行after操作</li></ul></blockquote><h5 id="Predicate接口"><a href="#Predicate接口" class="headerlink" title="Predicate接口"></a>Predicate接口</h5><blockquote><p>Predicate<T>：常用的四个方法</p><ul><li>boolean test(T t)：对给定的参数进行判断(判断逻辑由Lambda表达式实现)，返回一个布尔值</li><li>default Predicate<T> negate()：返回一个逻辑的否定，对应逻辑非</li><li>default Predicate<T> and(Predicate other)：返回一个组合判断，对应短路与</li><li>default Predicate<T> or(Predicate other)：返回一个组合判断，对应短路或</li><li>Predicate<T> 接口通常用于判断参数是否满足指定的条件</li></ul></blockquote><h5 id="Function接口"><a href="#Function接口" class="headerlink" title="Function接口"></a>Function接口</h5><blockquote><p>Function&lt;T,R&gt;：常用的两个方法</p><ul><li>R apply(T,t)：将此函数应用于给定的参数</li><li>default <V> Function andThen(Function after)：返回一个组合函数，首先将该函数应用于输入，然后将after函数应用于结果</li><li>Function&lt;T,R&gt;接口通常用于对参数进行处理，转换(处理逻辑由Lambda表达式实现)，然后返回一个新的值</li></ul></blockquote>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;link rel=&quot;stylesheet&quot; class=&quot;aplayer-secondary-style-marker&quot; href=&quot;\assets\css\APlayer.min.css&quot;&gt;&lt;script src=&quot;\assets\js\APlayer.min.js&quot; cla</summary>
+      
+    
+    
+    
+    <category term="Out_Learn" scheme="https://www.handsomelv.top/categories/Out-Learn/"/>
+    
+    
+    <category term="Java" scheme="https://www.handsomelv.top/tags/Java/"/>
+    
+  </entry>
   
   <entry>
     <title>线程</title>
@@ -457,27 +481,6 @@
     <category term="Out_Learn" scheme="https://www.handsomelv.top/categories/Out-Learn/"/>
     
     <category term="_Play" scheme="https://www.handsomelv.top/categories/Out-Learn/Play/"/>
-    
-    
-    <category term="Java" scheme="https://www.handsomelv.top/tags/Java/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Java复习第二弹</title>
-    <link href="https://www.handsomelv.top/2021/07/11/Java_Learn/Part2/"/>
-    <id>https://www.handsomelv.top/2021/07/11/Java_Learn/Part2/</id>
-    <published>2021-07-11T08:25:22.000Z</published>
-    <updated>2022-04-27T00:59:43.064Z</updated>
-    
-    <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><p><img src="https://www.w3cschool.cn/attachments/image/20161101/1477969977993875.png" alt="java" loading="lazy"></p><span id="more"></span><h2 id="基本数据类型之间的运算规则"><a href="#基本数据类型之间的运算规则" class="headerlink" title="基本数据类型之间的运算规则:"></a>基本数据类型之间的运算规则:</h2><blockquote><p>前提:这里讨论只是7种基本数据类型变量间的运算。不包含boolean类型的。<br>1．自动类型提升:<br>结论:当容量小的数据类型的变量与容量大的数据类型的变量做运算时，结果自动提升为容量byte . char . short –&gt; int –&gt; long –&gt;float –&gt; double<br>特别的:当byte、char、 short三种类型的变量做运算时，结果为int型<br>说明:此时的容量大小指的是，表示数的范围的大和小。比如: float容量要大于long的容量<br>2.强制类型转换:<br>自动类型转换的逆过程，将容量大的数据类型转换为容量小的数据类型。使用时要加上强制转换符:()，但可能造成精度降低或溢出,格外要注意<br>通常，字符串不能直接转换为基本类型，但通过基本类型对应的包装类则可以实现把字符串转换成基本类型。<br>如: String a =“43”; int i = Integer.parselnt(a);&gt;boolean类型不可以转换为其它的数据类型。</p></blockquote><h2 id="String类型变量的使用"><a href="#String类型变量的使用" class="headerlink" title="String类型变量的使用"></a>String类型变量的使用</h2><blockquote><ol><li>String属于引用数据类型,翻译为:字符串<br>2．声明string类型变量时,使用一对””</li><li>String可以和8种基本数据类型变量做运算，且运算只能是连接运算:+4．运算的结果仍然是String类型</li></ol></blockquote><h2 id="运算表格"><a href="#运算表格" class="headerlink" title="运算表格"></a>运算表格</h2><table><thead><tr><th align="center">运算符</th><th align="center">运算</th><th align="center">范例</th><th align="center">结果</th></tr></thead><tbody><tr><td align="center">+</td><td align="center">正号</td><td align="center">+3</td><td align="center">3</td></tr><tr><td align="center">-</td><td align="center">负号</td><td align="center">b=4;-b</td><td align="center">-4</td></tr><tr><td align="center">+</td><td align="center">加</td><td align="center">5+5</td><td align="center">10</td></tr><tr><td align="center">-</td><td align="center">减</td><td align="center">6-4</td><td align="center">2</td></tr><tr><td align="center">*</td><td align="center">乘</td><td align="center">3*4</td><td align="center">12</td></tr><tr><td align="center">/</td><td align="center">除</td><td align="center">5/5</td><td align="center">1</td></tr><tr><td align="center">%</td><td align="center">取模(取余)</td><td align="center">7%5</td><td align="center">2</td></tr><tr><td align="center">++</td><td align="center">自增(前):先运算后取值</td><td align="center">a=2,b=++a;</td><td align="center">a=3;b=3</td></tr><tr><td align="center">++</td><td align="center">自增(后):先取值后运算</td><td align="center">a=2;b=a++;</td><td align="center">a=3;b=2</td></tr><tr><td align="center">–</td><td align="center">自减(前):先运算后取值</td><td align="center">a=2;b=–a</td><td align="center">a=1;b=1</td></tr><tr><td align="center">–</td><td align="center">自减(后):先取值后运算</td><td align="center">a=2;b=a–</td><td align="center">a=1;b=2</td></tr><tr><td align="center">+</td><td align="center">字符串连接</td><td align="center">“He””+ llo”</td><td align="center">“Hello”</td></tr></tbody></table><h2 id="运算符号"><a href="#运算符号" class="headerlink" title="运算符号"></a>运算符号</h2><blockquote><p>当“=”两侧数据类型不一致时，可以使用自动类取转换或使用强制类型转换原则进行处理。<br>支持连续赋值。<br>扩展赋值运算符:+=，-=，*=，/=，%=</p></blockquote><h2 id="比较运算符"><a href="#比较运算符" class="headerlink" title="比较运算符"></a>比较运算符</h2><table><thead><tr><th align="center">运算符</th><th align="center">运算</th><th align="center">范例</th><th align="center">结果</th></tr></thead><tbody><tr><td align="center">==</td><td align="center">相等于</td><td align="center">4==3</td><td align="center">false</td></tr><tr><td align="center">!=</td><td align="center">不等于</td><td align="center">4!=3</td><td align="center">true</td></tr><tr><td align="center">&lt;</td><td align="center">小于</td><td align="center">4&lt;3</td><td align="center">false</td></tr><tr><td align="center">&gt;</td><td align="center">大于</td><td align="center">4&gt;3</td><td align="center">true</td></tr><tr><td align="center">&lt;=</td><td align="center">小于等于</td><td align="center">4&lt;=3</td><td align="center">false</td></tr><tr><td align="center">&gt;=</td><td align="center">大于等于</td><td align="center">4&gt;=3</td><td align="center">true</td></tr><tr><td align="center">instanceof</td><td align="center">检查是否是类的对象</td><td align="center">“Hello”instanceof String</td><td align="center">true</td></tr></tbody></table><blockquote><p>比较运算符的结果都是boolean型，也就是要么是true，要么是false。<br>比较运算符“==”不能误写成“=”。</p></blockquote>]]></content>
-    
-    
-    <summary type="html">&lt;p&gt;&lt;img src=&quot;https://www.w3cschool.cn/attachments/image/20161101/1477969977993875.png&quot; alt=&quot;java&quot;&gt;&lt;/p&gt;</summary>
-    
-    
-    
-    <category term="Out_Learn" scheme="https://www.handsomelv.top/categories/Out-Learn/"/>
     
     
     <category term="Java" scheme="https://www.handsomelv.top/tags/Java/"/>
