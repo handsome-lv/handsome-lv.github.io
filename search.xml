@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>反射</title>
+      <link href="/2022/10/11/Java_Learn/Review/reflect/"/>
+      <url>/2022/10/11/Java_Learn/Review/reflect/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="类加载器"><a href="#类加载器" class="headerlink" title="类加载器"></a>类加载器</h4><blockquote><p>类的加载</p><ul><li>就是指将class文件读入内存，并为之创建一个java.lang.Class对象</li><li>任何类被使用时，系统都会为之创建一个java.lang.Class对象</li></ul><p>类的连接</p><ul><li>验证阶段：用于检验被加载的类是否有正确的内部结构，并和其他类协调一致</li><li>准备阶段：负责为类的类变量分配内存，并设置默认初始化值</li><li>解析阶段：将类的二进制数据中的符号引用替换为直接引用</li></ul><p>类的初始化</p><ul><li>假如类还未被加载和连接，则程序先加载并连接该类</li><li>假如该类的直接父类还未被初始化，则先初始化其直接父类</li><li>假如类中有初始化语句，则系统依次执行这些初始化语句</li></ul></blockquote><blockquote><p>类的初始化时机</p><ul><li>创建类的实例</li><li>调用类的类方法</li><li>访问类或者接口的类变量，或者为该类变量赋值</li><li>使用反射方式来强制创建某个类或接口对应的java.lang.Class对象</li><li>初始化某个类的子类</li><li>直接使用java.exe命令来运行某个主类</li></ul></blockquote><h5 id="类加载器作用"><a href="#类加载器作用" class="headerlink" title="类加载器作用"></a>类加载器作用</h5><blockquote><ul><li>负责将.class文件加载到内存中，并为之生成对应的java.lang.Class对象</li></ul><p>JVM类加载机制</p><ul><li>全盘负责：就是当一个类加载器负责加载某个class时，该class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显示使用另外一个类加载器来载入</li><li>父类委托：就是当一个类加载器负责加载某个Class时，先让父类加载器试图加载该Class，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</li><li>缓存机制：保证所有加载过的Class都会被缓存，当程序需要使用某个Class对象时，类加载器先从缓存区中搜索该Class，只有当缓存区中不存在该Class对象时，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存储到缓存区</li></ul></blockquote><h5 id="类加载器-1"><a href="#类加载器-1" class="headerlink" title="类加载器"></a>类加载器</h5><blockquote><p>ClassLoader：是负责加载类的对象</p><p>Java运行时具有以下内置类加载器</p><ul><li>Bootstrap class loader：它是虚拟机的内置类加载器，通常表现为null，并且没有父null</li><li>Platform class loader：平台类加载器可以看到所有的平台类，平台类包括由平台类加载器或其祖先定义的JavaSE平台API，其实现类和JDK特定工具上的类</li><li>类加载器的继承关系：System的父加载器为Platform。而Platform的父加载器为Bootstrap</li></ul><p>ClassLoader的两个方法</p><ul><li>static ClassLoader getSystemClassLoader()：返回用于委派的系统类加载器</li><li>ClassLoader getParent()：返回父类加载器进行委派</li></ul></blockquote><h4 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h4><blockquote><p>反射机制：运行时去获取一个类的变量和方法信息。然后通过获取到的信息来创建对象，调用方法。</p><p>可以极大的增强程序的灵活性，程序不用在编译期就完成确定，在运行期仍然可以拓展</p></blockquote><h5 id="获取class对象"><a href="#获取class对象" class="headerlink" title="获取class对象"></a>获取class对象</h5><blockquote><ol><li>使用类的class属性来获取该类的class对象</li><li>调用对象的getClass()方法</li><li>使用Class类中的静态方法forName(String className)</li></ol></blockquote><h5 id="获取构造方法"><a href="#获取构造方法" class="headerlink" title="获取构造方法"></a>获取构造方法</h5><blockquote><ul><li>Constructor&lt;?&gt;[] getConstructors()：返回所有公共构造方法对象的数组</li><li>Constructor&lt;?&gt;[] getDeclaredConstructors()：返回所有构造方法对象的数组</li><li>Constructor<T> getConstructor(Class&lt;?&gt;…parameterTypes)：返回单个公共构造方法对象</li><li>Constructor<T> getDeclaredConstructor(Class&lt;?&gt;…parameterTypes)：返回单个构造方法对象</li></ul><p>创建对象的方法</p><ul><li>T newInstance(Object…initargs)：根据指定的构造方法创建对象</li></ul></blockquote><h5 id="获取成员变量并使用"><a href="#获取成员变量并使用" class="headerlink" title="获取成员变量并使用"></a>获取成员变量并使用</h5><blockquote><ul><li>Field[] getFields()：返回所有公共成员变量对象的数组</li><li>Field[] getDeclaredFields()：返回所有成员变量对象的数组</li><li>Field getField(String name)：返回单个公共成员变量对象</li><li>Field getDeclaredField(String name)：返回单个成员变量对象</li></ul><p>用于成员变量赋值的方法</p><ul><li>void set(Object obj,Object value)：给obj对象的成员变量赋值为value</li></ul></blockquote><h5 id="获取成员方法并使用"><a href="#获取成员方法并使用" class="headerlink" title="获取成员方法并使用"></a>获取成员方法并使用</h5><blockquote><p>Class类中用于获取成员方法的方法</p><ul><li>Method[] getMethods()：返回所有公共成员方法对象的数组，包括继承的</li><li>Method[] getDeclaredMethods()：返回所有成员方法对象的数组，不包括继承的</li><li>Method getMethod(String name, Class&lt;?&gt;… parameterTypes)：返回单个公共成员方法对象</li><li>Method getDeclaredMethod(String name,Class&lt;?&gt;… parameterTypes)：返回单个成员方法对象</li></ul><p>Method类中用于调用成员方法的方法</p><ul><li>Object invoke(Object obj, Object…args)：调用obj对象的成员方法，参数是args,返回值是Object类型</li></ul></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> Out_Learn </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Stream 流</title>
+      <link href="/2022/10/11/Java_Learn/Review/stream/"/>
+      <url>/2022/10/11/Java_Learn/Review/stream/</url>
+      
+        <content type="html"><![CDATA[<link rel="stylesheet" class="aplayer-secondary-style-marker" href="\assets\css\APlayer.min.css"><script src="\assets\js\APlayer.min.js" class="aplayer-secondary-script-marker"></script><h4 id="Stream流"><a href="#Stream流" class="headerlink" title="Stream流"></a>Stream流</h4><h5 id="生成方式"><a href="#生成方式" class="headerlink" title="生成方式"></a>生成方式</h5><blockquote><ul><li>生成流<ul><li>通过数据源(集合，数组等)生成流</li><li>list.stream()</li></ul></li><li>中间操作<ul><li>一个流后面可以跟随零个或多个中间操作，其主要是打开流，做出某种程度的数据过滤/映射，然后返回一个新的流，交给下一个操作使用</li><li>filter()</li></ul></li><li>终结操作<ul><li>一个流只能有一个终结操作，当这个操作执行后，无法再被操作</li><li>forEach()</li></ul></li></ul></blockquote><h5 id="常见生成方式"><a href="#常见生成方式" class="headerlink" title="常见生成方式"></a>常见生成方式</h5><ul><li><p>Collection体系的集合可以使用默认方法stream()生成流</p><ul><li><p>default Stream<E> stream()</p></li><li><p>```java<br>  Stream<String> setStream = set.stream();</p>  <pre class="language-none"><code class="language-none">- Map体系的集合间接的生成流- &#96;&#96;&#96;javaMap&lt;String,Integer&gt; map &#x3D; new HashMap&lt;&gt;();Stream&lt;String&gt; keyStream &#x3D; map.keySet().stream();Stream&lt;Integer&gt; valueStream &#x3D; map.values().stream();Stream&lt;Map.Entry&lt;String,Integer&gt;&gt; entryStream &#x3D; map.entrySet().stream();</code></pre></li></ul></li><li><p>数组可以通过Stream接口的静态方法of(T…values)生成流</p></li><li><pre><code class="java">  String[] strArray = &#123;&quot;hello&quot;,&quot;world&quot;,&quot;java&quot;&#125;;  Stream&lt;String&gt; strArrayStream = Stream.of(strArray);  Stream&lt;String&gt; strArrayStream2 = Stream.of(&quot;hello&quot;,&quot;world&quot;,&quot;java&quot;);  Stream&lt;Integer&gt; intStream = Stream.of(10,20,30);</code></pre></li></ul><h5 id="常见中间操作方法"><a href="#常见中间操作方法" class="headerlink" title="常见中间操作方法"></a>常见中间操作方法</h5><ul><li>Stream <T> filter(Predicate predicate)：用于对流中的数据进行过滤<ul><li>Predicate接口中的方法     boolean test(T t)：对给定的参数进行判断，返回一个布尔值</li></ul></li><li>Stream <T> limit(long maxSize)：返回此流中的元素组成的流，截取前指定参数个数的数据</li><li>Stream <T> skip(long n)：跳过指定参数个数的数据，返回由该流的剩余元素组成的流</li><li>static <T> Stream <T> concat(Stream a,Stream b)：合并a和b两个流为一个流</li><li>Stream  <T> distinct()：返回由该流的不同元素(根据Object.equals(Object))组成的流</li><li>Stream <T> sorted(Comparator comparator)：返回由该流的元素组成的流，根据提供的Comparator进行排序，默认自然排序</li><li><R> Stream<R> map(Function mapper)：返回由给定函数应用于此流的元素的结果组成的流<ul><li>Function接口的方法     R apply(T t)</li></ul></li><li>IntStream mapToInt(ToIntFunction mapper)：返回一个IntStream其中包含将给定函数应用于此流的元素的结果<ul><li>IntStream：表示原始int流</li><li>ToIntFunction接口中的方法       int applyAsInt(T value)</li></ul></li></ul><h5 id="常见终结操作方法"><a href="#常见终结操作方法" class="headerlink" title="常见终结操作方法"></a>常见终结操作方法</h5><ul><li>void forEach(Consumer action) ：对此流的每个元素执行操作<ul><li>Consumer接口中的方法     void accept(T t)：对给定的参数执行此操作</li></ul></li><li>long count()：返此流中的元素数</li></ul><h5 id="Stream流收集操作"><a href="#Stream流收集操作" class="headerlink" title="Stream流收集操作"></a>Stream流收集操作</h5><blockquote><p>对数据使用Stream流的操作完毕后，数据收集到集合中</p><ul><li>R collect(Collector collector)</li><li>该收集方法参数是一个Collector接口</li></ul><p>工具类Collector提供了具体的收集方式</p><ul><li>publc static <T> Collector toList()：把元素收集到List集合中</li><li>publc static <T> Collector toSet()：把元素收集到Set集合中</li><li>publc static Collector toMap(Function keyMapper,Function valueMapper)：把元素收集到Map集合中</li></ul></blockquote>]]></content>
+      
+      
+      <categories>
+          
+          <category> Out_Learn </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Lambda 函数式编程</title>
       <link href="/2022/10/10/Java_Learn/Review/Lambda/"/>
       <url>/2022/10/10/Java_Learn/Review/Lambda/</url>
