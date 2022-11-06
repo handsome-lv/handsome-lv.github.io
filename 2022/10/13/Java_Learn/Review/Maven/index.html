@@ -1,0 +1,272 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="晗涩LV"><meta name="copyright" content="晗涩LV"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>Maven基础 | 晗涩LV的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.handsomelv.top","root":"/","title":"晗涩的小站","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["160, 54, 176","33, 55, 184"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom.xml" title="晗涩LV的小站" type="application/atom+xml"><script src="/" async></script><script src="/j" async></script><script src="/s" async></script><script src="/" async></script><script src="/D" async></script><script src="/i" async></script><script src="/g" async></script><script src="/i" async></script><script src="/t" async></script><script src="/a" async></script><script src="/l" async></script><script src="/R" async></script><script src="/a" async></script><script src="/i" async></script><script src="/n" async></script><script src="/." async></script><script src="/j" async></script><script src="/s" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="Maven Maven本质是一个项目管理工具，将次项目开发和管理过程抽成一个项目对象模型（POM） POM：项目对象模型   Maven基础概念仓库 用于存储资源，包含各种jar包  本地仓库：自己电脑上存储资源的仓库，连接远程仓库获取资源 远程仓库：非本机电脑上的仓库，为本机仓库提供资源 中央仓库：Maven团队维护，存储所有资源的仓库 私服：部门&#x2F;公司范围内存储资源的仓库，从中央仓库获取资源">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven基础">
+<meta property="og:url" content="https://www.handsomelv.top/2022/10/13/Java_Learn/Review/Maven/index.html">
+<meta property="og:site_name" content="晗涩LV的小站">
+<meta property="og:description" content="Maven Maven本质是一个项目管理工具，将次项目开发和管理过程抽成一个项目对象模型（POM） POM：项目对象模型   Maven基础概念仓库 用于存储资源，包含各种jar包  本地仓库：自己电脑上存储资源的仓库，连接远程仓库获取资源 远程仓库：非本机电脑上的仓库，为本机仓库提供资源 中央仓库：Maven团队维护，存储所有资源的仓库 私服：部门&#x2F;公司范围内存储资源的仓库，从中央仓库获取资源">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.handsomelv.top/images/posts/Java_Learn/Review/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg">
+<meta property="article:published_time" content="2022-10-13T07:23:40.000Z">
+<meta property="article:modified_time" content="2022-11-06T13:05:47.128Z">
+<meta property="article:author" content="晗涩LV">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.handsomelv.top/images/posts/Java_Learn/Review/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="晗涩LV"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="晗涩LV"><span class="site-author-status" title="Master sex.">🤨</span></a><div class="site-author-name"><a href="/about/">晗涩LV</a></div><a class="site-name" href="/about/site.html">晗涩LV的小站</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="主页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2775085562&amp;site=qq&amp;menu=yes" title="QQ 2775085562" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/handsome-lv" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/7197970040" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/436910603" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/HANDSME_L" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友人帐" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="女孩子" style="color:HotPink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a><a class="links-item hty-icon-button" href="/tools/" title="在线工具" style="color:#00FF00"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a><a class="links-item hty-icon-button" href="/websites/" title="便捷网站" style="color:#DBA901"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-external-link-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Maven"><span class="toc-number">1.</span> <span class="toc-text">Maven</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#Maven%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5"><span class="toc-number">1.1.</span> <span class="toc-text">Maven基础概念</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BB%93%E5%BA%93"><span class="toc-number">1.1.1.</span> <span class="toc-text">仓库</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9D%90%E6%A0%87"><span class="toc-number">1.1.2.</span> <span class="toc-text">坐标</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.</span> <span class="toc-text">依赖管理</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E9%85%8D%E7%BD%AE"><span class="toc-number">1.2.1.</span> <span class="toc-text">依赖配置</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E4%BC%A0%E9%80%92"><span class="toc-number">1.2.2.</span> <span class="toc-text">依赖传递</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8F%AF%E9%80%89%E4%BE%9D%E8%B5%96"><span class="toc-number">1.2.3.</span> <span class="toc-text">可选依赖</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%8E%92%E9%99%A4%E4%BE%9D%E8%B5%96"><span class="toc-number">1.2.4.</span> <span class="toc-text">排除依赖</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E8%8C%83%E5%9B%B4"><span class="toc-number">1.2.5.</span> <span class="toc-text">依赖范围</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E4%B8%8E%E6%8F%92%E4%BB%B6"><span class="toc-number">1.3.</span> <span class="toc-text">生命周期与插件</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9E%84%E5%BB%BA%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.3.1.</span> <span class="toc-text">构建生命周期</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#clean%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.3.2.</span> <span class="toc-text">clean生命周期</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#default%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.3.3.</span> <span class="toc-text">default生命周期</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#site%E6%9E%84%E5%BB%BA%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-number">1.3.4.</span> <span class="toc-text">site构建生命周期</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%8F%92%E4%BB%B6"><span class="toc-number">1.3.5.</span> <span class="toc-text">插件</span></a></li></ol></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.handsomelv.top/2022/10/13/Java_Learn/Review/Maven/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="晗涩LV"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="晗涩LV的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">Maven基础</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-10-13 15:23:40" itemprop="dateCreated datePublished" datetime="2022-10-13T15:23:40+08:00">2022-10-13</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">1k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">3m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Out-Learn/" style="--text-color:#F5A9F2" itemprop="url" rel="index"><span itemprop="text">Out_Learn</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/Java/" style="--text-color:#61dafb"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">Java</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h4 id="Maven"><a href="#Maven" class="headerlink" title="Maven"></a>Maven</h4><blockquote>
+<p>Maven本质是一个项目管理工具，将次项目开发和管理过程抽成一个项目对象模型（POM）</p>
+<p>POM：项目对象模型</p>
+</blockquote>
+<p><img src="/images/posts/Java_Learn/Review/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="生命周期" loading="lazy"></p>
+<h5 id="Maven基础概念"><a href="#Maven基础概念" class="headerlink" title="Maven基础概念"></a>Maven基础概念</h5><h6 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h6><blockquote>
+<p>用于存储资源，包含各种jar包</p>
+<ul>
+<li>本地仓库：自己电脑上存储资源的仓库，连接远程仓库获取资源</li>
+<li>远程仓库：非本机电脑上的仓库，为本机仓库提供资源<ul>
+<li>中央仓库：Maven团队维护，存储所有资源的仓库</li>
+<li>私服：部门/公司范围内存储资源的仓库，从中央仓库获取资源</li>
+</ul>
+</li>
+<li>私服的作用：<ul>
+<li>保存具有版权的资源，包含购买或自主开发的jar<ul>
+<li>中央仓库的jar都是开源的，不能存储具有版权的资源</li>
+</ul>
+</li>
+<li>一定范围内共享资源，仅对内部开放，不对外共享</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h6 id="坐标"><a href="#坐标" class="headerlink" title="坐标"></a>坐标</h6><blockquote>
+<p>Maven中的坐标用于描述仓库中资源的位置</p>
+<p>Maven坐标的组成</p>
+<ul>
+<li>groupId：定义当前Maven项目隶属组织名称</li>
+<li>artifactId：定义当前Maven项目名称</li>
+<li>version：定义当前项目版本号</li>
+</ul>
+</blockquote>
+<h5 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h5><h6 id="依赖配置"><a href="#依赖配置" class="headerlink" title="依赖配置"></a>依赖配置</h6><blockquote>
+<ul>
+<li><p>依赖指当前项目运行所需的jar，一个项目可以设置多个依赖</p>
+</li>
+<li><p>格式：</p>
+  <pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token comment">&lt;!--设置当前项目所依赖的所有jar--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
+    <span class="token comment">&lt;!--设置具体的依赖--></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token comment">&lt;!--依赖所属群组id--></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>junit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+    	<span class="token comment">&lt;!--依赖所属项目id--></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>junit<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token comment">&lt;!--依赖版本号--></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>4.12<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span>    </code></pre></li>
+</ul>
+</blockquote>
+<h6 id="依赖传递"><a href="#依赖传递" class="headerlink" title="依赖传递"></a>依赖传递</h6><blockquote>
+<p>将一个项目依赖直接作为依赖项赋值给另一个项目，该项目依赖进行继承传递</p>
+<ul>
+<li>直接依赖：在当前项目中通过依赖配置建立的依赖关系</li>
+<li>间接依赖：被依赖的资源如果依赖其他资源，当前项目间接依赖其他资源</li>
+<li>依赖优先：当同级配置了相同资源的不同版本，后配置的覆盖先配置的</li>
+</ul>
+</blockquote>
+<h6 id="可选依赖"><a href="#可选依赖" class="headerlink" title="可选依赖"></a>可选依赖</h6><blockquote>
+<ul>
+<li><p>可选依赖指对外隐藏当前所依赖的资源</p>
+  <pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>optional</span><span class="token punctuation">></span></span>true<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>optional</span><span class="token punctuation">></span></span></code></pre></li>
+</ul>
+</blockquote>
+<h6 id="排除依赖"><a href="#排除依赖" class="headerlink" title="排除依赖"></a>排除依赖</h6><blockquote>
+<ul>
+<li><p>排除依赖指主动断开依赖的资源，被排除的资源无需指定版本</p>
+  <pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusions</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>exclusion</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.hamcrest<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>hamcrest-core<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusion</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>exclusions</span><span class="token punctuation">></span></span></code></pre></li>
+</ul>
+</blockquote>
+<h6 id="依赖范围"><a href="#依赖范围" class="headerlink" title="依赖范围"></a>依赖范围</h6><blockquote>
+<ul>
+<li><p>依赖的jar默认情况可以在任何地方使用，可以通过scope标签设定其作用范围</p>
+</li>
+<li><p>作用范围</p>
+<ul>
+<li><p>主程序范围有效（main文件夹范围内）</p>
+</li>
+<li><p>测试程序范围有效（test文件夹范围内）</p>
+</li>
+<li><p>是否参与打包（package指令范围内）</p>
+</li>
+<li><table>
+<thead>
+<tr>
+<th>scope</th>
+<th>主代码</th>
+<th>测试代码</th>
+<th>打包</th>
+<th>范例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile（默认）</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>log4j</td>
+</tr>
+<tr>
+<td>test</td>
+<td></td>
+<td>Y</td>
+<td></td>
+<td>junit</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>Y</td>
+<td>Y</td>
+<td></td>
+<td>servlet-api</td>
+</tr>
+<tr>
+<td>runtime</td>
+<td></td>
+<td></td>
+<td>Y</td>
+<td>jdbc</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h5 id="生命周期与插件"><a href="#生命周期与插件" class="headerlink" title="生命周期与插件"></a>生命周期与插件</h5><h6 id="构建生命周期"><a href="#构建生命周期" class="headerlink" title="构建生命周期"></a>构建生命周期</h6><blockquote>
+<p><code>compile -&gt; test-compile -&gt; test -&gt; package -&gt; install</code></p>
+</blockquote>
+<blockquote>
+<ul>
+<li>Maven对项目构建的生命周期划分为3套<ul>
+<li><code>clean</code> ：清理工作</li>
+<li><code>default</code> ：核心工作，例如编译，测试，打包，部署等</li>
+<li><code>site</code> ：产生报告，发布站点等</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h6 id="clean生命周期"><a href="#clean生命周期" class="headerlink" title="clean生命周期"></a>clean生命周期</h6><blockquote>
+<ul>
+<li>pre-clean：执行一些需要在clean之前完成的工作</li>
+<li>clean：移除所有上一次构建生成的文件</li>
+<li>post-clean：执行一些需要在clean之后立刻完成的工作</li>
+</ul>
+</blockquote>
+<h6 id="default生命周期"><a href="#default生命周期" class="headerlink" title="default生命周期"></a>default生命周期</h6><blockquote>
+<p>包含了普通编译测试打包的全部等</p>
+</blockquote>
+<h6 id="site构建生命周期"><a href="#site构建生命周期" class="headerlink" title="site构建生命周期"></a>site构建生命周期</h6><blockquote>
+<ul>
+<li>pre-site：执行一些需要在生成站点文档之前完成的工作</li>
+<li>site：生成项目的站点文档</li>
+<li>post-site：执行一些需要在生成站点文档之后完成的工作，并且为部署做准备</li>
+<li>site-deploy：将生成的站点文档部署到特定的服务器上</li>
+</ul>
+</blockquote>
+<h6 id="插件"><a href="#插件" class="headerlink" title="插件"></a>插件</h6><blockquote>
+<ul>
+<li><p>插件与生命周期内的阶段绑定，在执行到对应生命周期时执行对应的插件功能</p>
+</li>
+<li><p>默认maven在各个生命周期上绑定有预设的功能</p>
+</li>
+<li><p>通过插件可以自定义其他功能</p>
+  <pre class="language-xml" data-language="xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>executions</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>execution</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>goals</span><span class="token punctuation">></span></span>
+            <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>goal</span><span class="token punctuation">></span></span>jar<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>goal</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>goals</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>phase</span><span class="token punctuation">></span></span>generate-test-resources<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>phase</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>execution</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>executions</span><span class="token punctuation">></span></span></code></pre></li>
+</ul>
+</blockquote>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>晗涩LV</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.handsomelv.top/2022/10/13/Java_Learn/Review/Maven/" title="Maven基础">https://www.handsomelv.top/2022/10/13/Java_Learn/Review/Maven/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/10/21/Database_Learn/MySQL/mysql_base/" rel="prev" title="MySQL基础篇"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">MySQL基础篇</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/10/11/Java_Learn/Review/reflect/" rel="next" title="反射"><span class="post-nav-text">反射</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br><span>可以留下你的信息哦(支持匿名,也可以直接去Github_issues)😀😀😀</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/handsome-lv/handsome-lv.github.io/issues?q=is:issue+Maven基础">GitHub Issues</a></div><div id="valine-container"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js", () => {
+  const valineConfig = {"enable":true,"appId":"7FQHXArkO0B5lBLzBQV5VKYa-MdYXbMMI","appKey":"wOV2dJicWiDBYhdMunyHXwm5","placeholder":"说点儿什么吧(●'◡'●)","avatar":null,"pageSize":10,"visitor":false,"highlight":true,"recordIP":false,"enableQQ":true,"el":"#valine-container","lang":"zh-cn"}
+  valineConfig.path = "/2022/10/13/Java_Learn/Review/Maven/"
+  new Valine(valineConfig)
+}, window.Valine);</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 晗涩LV</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.2</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.8.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-04-22T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="想要搜些什么？" value=""></div><div id="local-search-result"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","5-22","12-13"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><div class="aplayer no-destroy" id="aplayer" data-id="7976504515" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay data-theme="#2980b9" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7" data-mutex data-lrctype="0" data-listfolded data-listmaxheight="340px" data-storagename="metingjs"></div></div></body></html>

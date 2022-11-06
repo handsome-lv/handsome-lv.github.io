@@ -1,0 +1,791 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="晗涩LV"><meta name="copyright" content="晗涩LV"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>MySQL进阶篇 | 晗涩LV的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.handsomelv.top","root":"/","title":"晗涩的小站","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["160, 54, 176","33, 55, 184"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom.xml" title="晗涩LV的小站" type="application/atom+xml"><script src="/" async></script><script src="/j" async></script><script src="/s" async></script><script src="/" async></script><script src="/D" async></script><script src="/i" async></script><script src="/g" async></script><script src="/i" async></script><script src="/t" async></script><script src="/a" async></script><script src="/l" async></script><script src="/R" async></script><script src="/a" async></script><script src="/i" async></script><script src="/n" async></script><script src="/." async></script><script src="/j" async></script><script src="/s" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="MySQL体系结构 连接层，服务层，引擎层，存储层  存储引擎简介 存储引擎就是存储数据、建立索引、更新&#x2F;查询数据等技术的实现方式。存储引擎是基于表的，而不是基于库的，所以存储引擎也被称表类型   创建表时指定存储引擎： create table 表名( )engine&#x3D;innodb [comment 表注释];  查看当前数据库支持的存储引擎 show engines;  存储引擎特点InnoD">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL进阶篇">
+<meta property="og:url" content="https://www.handsomelv.top/2022/10/27/Database_Learn/MySQL/mysql_advanced/index.html">
+<meta property="og:site_name" content="晗涩LV的小站">
+<meta property="og:description" content="MySQL体系结构 连接层，服务层，引擎层，存储层  存储引擎简介 存储引擎就是存储数据、建立索引、更新&#x2F;查询数据等技术的实现方式。存储引擎是基于表的，而不是基于库的，所以存储引擎也被称表类型   创建表时指定存储引擎： create table 表名( )engine&#x3D;innodb [comment 表注释];  查看当前数据库支持的存储引擎 show engines;  存储引擎特点InnoD">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-27T07:23:40.000Z">
+<meta property="article:modified_time" content="2022-11-06T13:04:35.601Z">
+<meta property="article:author" content="晗涩LV">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="晗涩LV"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="晗涩LV"><span class="site-author-status" title="Master sex.">🤨</span></a><div class="site-author-name"><a href="/about/">晗涩LV</a></div><a class="site-name" href="/about/site.html">晗涩LV的小站</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="主页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2775085562&amp;site=qq&amp;menu=yes" title="QQ 2775085562" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/handsome-lv" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/7197970040" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/436910603" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/HANDSME_L" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友人帐" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="女孩子" style="color:HotPink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a><a class="links-item hty-icon-button" href="/tools/" title="在线工具" style="color:#00FF00"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a><a class="links-item hty-icon-button" href="/websites/" title="便捷网站" style="color:#DBA901"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-external-link-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MySQL%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84"><span class="toc-number">1.</span> <span class="toc-text">MySQL体系结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E"><span class="toc-number">2.</span> <span class="toc-text">存储引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E7%89%B9%E7%82%B9"><span class="toc-number">2.2.</span> <span class="toc-text">存储引擎特点</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#InnoDB"><span class="toc-number">2.2.1.</span> <span class="toc-text">InnoDB</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#MyISAM"><span class="toc-number">2.2.2.</span> <span class="toc-text">MyISAM</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Memory"><span class="toc-number">2.2.3.</span> <span class="toc-text">Memory</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%BC%95%E6%93%8E%E9%80%89%E6%8B%A9"><span class="toc-number">2.3.</span> <span class="toc-text">存储引擎选择</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95"><span class="toc-number">3.</span> <span class="toc-text">索引</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">3.1.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E7%BB%93%E6%9E%84"><span class="toc-number">3.2.</span> <span class="toc-text">索引结构</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#B-Tree"><span class="toc-number">3.2.1.</span> <span class="toc-text">B-Tree</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#B-Tree-1"><span class="toc-number">3.2.2.</span> <span class="toc-text">B+Tree</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#Hash"><span class="toc-number">3.2.3.</span> <span class="toc-text">Hash</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%88%86%E7%B1%BB"><span class="toc-number">3.3.</span> <span class="toc-text">索引分类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E8%AF%AD%E6%B3%95"><span class="toc-number">3.4.</span> <span class="toc-text">索引语法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="toc-number">3.5.</span> <span class="toc-text">性能分析</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#SQL%E6%89%A7%E8%A1%8C%E9%A2%91%E7%8E%87"><span class="toc-number">3.5.1.</span> <span class="toc-text">SQL执行频率</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%85%A2%E6%9F%A5%E8%AF%A2%E6%97%A5%E5%BF%97"><span class="toc-number">3.5.2.</span> <span class="toc-text">慢查询日志</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#profile%E8%AF%A6%E6%83%85"><span class="toc-number">3.5.3.</span> <span class="toc-text">profile详情</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#explain%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92"><span class="toc-number">3.5.4.</span> <span class="toc-text">explain执行计划</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E8%A7%84%E5%88%99"><span class="toc-number">3.6.</span> <span class="toc-text">使用规则</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9C%80%E5%B7%A6%E5%89%8D%E7%BC%80%E6%B3%95%E5%88%99"><span class="toc-number">3.6.1.</span> <span class="toc-text">最左前缀法则</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%B4%A2%E5%BC%95%E5%A4%B1%E6%95%88"><span class="toc-number">3.6.2.</span> <span class="toc-text">索引失效</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83%E5%BD%B1%E5%93%8D"><span class="toc-number">3.6.3.</span> <span class="toc-text">数据分布影响</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#SQL%E6%8F%90%E7%A4%BA"><span class="toc-number">3.6.4.</span> <span class="toc-text">SQL提示</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95"><span class="toc-number">3.6.5.</span> <span class="toc-text">覆盖索引</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%89%8D%E7%BC%80%E7%B4%A2%E5%BC%95"><span class="toc-number">3.6.6.</span> <span class="toc-text">前缀索引</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8D%95%E5%88%97%E7%B4%A2%E5%BC%95%E5%92%8C%E8%81%94%E5%90%88%E7%B4%A2%E5%BC%95"><span class="toc-number">3.6.7.</span> <span class="toc-text">单列索引和联合索引</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SQL%E4%BC%98%E5%8C%96"><span class="toc-number">4.</span> <span class="toc-text">SQL优化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE"><span class="toc-number">4.1.</span> <span class="toc-text">插入数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%BB%E9%94%AE%E4%BC%98%E5%8C%96"><span class="toc-number">4.2.</span> <span class="toc-text">主键优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8E%92%E5%BA%8Forder-by%E4%BC%98%E5%8C%96"><span class="toc-number">4.3.</span> <span class="toc-text">排序order by优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#group-by%E4%BC%98%E5%8C%96"><span class="toc-number">4.4.</span> <span class="toc-text">group by优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#limit%E5%88%86%E9%A1%B5%E4%BC%98%E5%8C%96"><span class="toc-number">4.5.</span> <span class="toc-text">limit分页优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#count%E4%BC%98%E5%8C%96"><span class="toc-number">4.6.</span> <span class="toc-text">count优化</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#update%E4%BC%98%E5%8C%96"><span class="toc-number">4.7.</span> <span class="toc-text">update优化</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE"><span class="toc-number">5.</span> <span class="toc-text">视图</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">5.1.</span> <span class="toc-text">基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E8%A7%86%E5%9B%BE"><span class="toc-number">5.1.1.</span> <span class="toc-text">创建视图</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%A7%86%E5%9B%BE"><span class="toc-number">5.1.2.</span> <span class="toc-text">查询视图</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%A7%86%E5%9B%BE"><span class="toc-number">5.1.3.</span> <span class="toc-text">修改视图</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%A7%86%E5%9B%BE"><span class="toc-number">5.1.4.</span> <span class="toc-text">删除视图</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E9%80%89%E9%A1%B9"><span class="toc-number">5.2.</span> <span class="toc-text">检查选项</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9B%B4%E6%96%B0%E5%8F%8A%E4%BD%9C%E7%94%A8"><span class="toc-number">5.3.</span> <span class="toc-text">更新及作用</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%A7%86%E5%9B%BE%E6%9B%B4%E6%96%B0"><span class="toc-number">5.3.1.</span> <span class="toc-text">视图更新</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BD%9C%E7%94%A8"><span class="toc-number">5.3.2.</span> <span class="toc-text">作用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-number">6.</span> <span class="toc-text">存储过程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95-1"><span class="toc-number">6.1.</span> <span class="toc-text">基本用法</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA"><span class="toc-number">6.1.1.</span> <span class="toc-text">创建</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%B0%83%E7%94%A8"><span class="toc-number">6.1.2.</span> <span class="toc-text">调用</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B"><span class="toc-number">6.1.3.</span> <span class="toc-text">查看</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">6.1.4.</span> <span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%8F%98%E9%87%8F"><span class="toc-number">6.2.</span> <span class="toc-text">变量</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%8F%98%E9%87%8F"><span class="toc-number">6.2.1.</span> <span class="toc-text">系统变量</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%AE%9A%E4%B9%89%E5%8F%98%E9%87%8F"><span class="toc-number">6.2.2.</span> <span class="toc-text">用户定义变量</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">6.2.3.</span> <span class="toc-text">局部变量</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E7%BB%84%E6%88%90%E9%83%A8%E5%88%86"><span class="toc-number">6.3.</span> <span class="toc-text">流程组成部分</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#if"><span class="toc-number">6.3.1.</span> <span class="toc-text">if</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8F%82%E6%95%B0"><span class="toc-number">6.3.2.</span> <span class="toc-text">参数</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#case"><span class="toc-number">6.3.3.</span> <span class="toc-text">case</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#while"><span class="toc-number">6.3.4.</span> <span class="toc-text">while</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#repeat"><span class="toc-number">6.3.5.</span> <span class="toc-text">repeat</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#loop"><span class="toc-number">6.3.6.</span> <span class="toc-text">loop</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%B8%B8%E6%A0%87cursor"><span class="toc-number">6.3.7.</span> <span class="toc-text">游标cursor</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E5%A4%84%E7%90%86%E7%A8%8B%E5%BA%8F"><span class="toc-number">6.3.8.</span> <span class="toc-text">条件处理程序</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E5%87%BD%E6%95%B0"><span class="toc-number">6.4.</span> <span class="toc-text">存储函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8-log"><span class="toc-number">7.</span> <span class="toc-text">触发器(log)</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-1"><span class="toc-number">7.1.</span> <span class="toc-text">创建</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B-1"><span class="toc-number">7.2.</span> <span class="toc-text">查看</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%A0%E9%99%A4-1"><span class="toc-number">7.3.</span> <span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%81"><span class="toc-number">8.</span> <span class="toc-text">锁</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%85%A8%E5%B1%80%E9%94%81"><span class="toc-number">8.1.</span> <span class="toc-text">全局锁</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%A8%E7%BA%A7%E9%94%81"><span class="toc-number">8.2.</span> <span class="toc-text">表级锁</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%A1%A8%E9%94%81"><span class="toc-number">8.2.1.</span> <span class="toc-text">表锁</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%85%83%E6%95%B0%E6%8D%AE%E9%94%81-MDL"><span class="toc-number">8.2.2.</span> <span class="toc-text">元数据锁(MDL)</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%84%8F%E5%90%91%E9%94%81"><span class="toc-number">8.2.3.</span> <span class="toc-text">意向锁</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%8C%E7%BA%A7%E9%94%81"><span class="toc-number">8.3.</span> <span class="toc-text">行级锁</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%A1%8C%E9%94%81"><span class="toc-number">8.3.1.</span> <span class="toc-text">行锁</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%97%B4%E9%9A%99%E9%94%81%E5%92%8C%E4%B8%B4%E9%94%AE%E9%94%81"><span class="toc-number">8.3.2.</span> <span class="toc-text">间隙锁和临键锁</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#InnoDB%E5%BC%95%E6%93%8E"><span class="toc-number">9.</span> <span class="toc-text">InnoDB引擎</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%80%BB%E8%BE%91%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">9.1.</span> <span class="toc-text">逻辑存储结构</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%8E%9F%E7%90%86"><span class="toc-number">9.2.</span> <span class="toc-text">事务原理</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#redo-log"><span class="toc-number">9.2.1.</span> <span class="toc-text">redo log</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undo-log"><span class="toc-number">9.2.2.</span> <span class="toc-text">undo log</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#MVVC"><span class="toc-number">9.3.</span> <span class="toc-text">MVVC</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">9.3.1.</span> <span class="toc-text">基本概念</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%9A%90%E8%97%8F%E5%AD%97%E6%AE%B5"><span class="toc-number">9.3.2.</span> <span class="toc-text">隐藏字段</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undo-log-1"><span class="toc-number">9.3.3.</span> <span class="toc-text">undo log</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#undo-log%E7%89%88%E6%9C%AC%E9%93%BE"><span class="toc-number">9.3.4.</span> <span class="toc-text">undo log版本链</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#readview"><span class="toc-number">9.3.5.</span> <span class="toc-text">readview</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">10.</span> <span class="toc-text">系统数据库</span></a></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.handsomelv.top/2022/10/27/Database_Learn/MySQL/mysql_advanced/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="晗涩LV"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="晗涩LV的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">MySQL进阶篇</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-10-27 15:23:40" itemprop="dateCreated datePublished" datetime="2022-10-27T15:23:40+08:00">2022-10-27</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">6.2k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">22m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Out-Learn/" style="--text-color:#F5A9F2" itemprop="url" rel="index"><span itemprop="text">Out_Learn</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/SQL/" style="--text-color:#F4645F"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SQL</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h4 id="MySQL体系结构"><a href="#MySQL体系结构" class="headerlink" title="MySQL体系结构"></a>MySQL体系结构</h4><blockquote>
+<p>连接层，服务层，引擎层，存储层</p>
+</blockquote>
+<h4 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h4><h5 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h5><blockquote>
+<p>存储引擎就是存储数据、建立索引、更新/查询数据等技术的实现方式。存储引擎是基于表的，而不是基于库的，所以存储引擎也被称表类型</p>
+</blockquote>
+<blockquote>
+<p>创建表时指定存储引擎：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> 表名<span class="token punctuation">(</span>
+<span class="token punctuation">)</span><span class="token keyword">engine</span><span class="token operator">=</span><span class="token keyword">innodb</span> <span class="token punctuation">[</span><span class="token keyword">comment</span> 表注释<span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+
+<p>查看当前数据库支持的存储引擎</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> engines<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h5 id="存储引擎特点"><a href="#存储引擎特点" class="headerlink" title="存储引擎特点"></a>存储引擎特点</h5><h6 id="InnoDB"><a href="#InnoDB" class="headerlink" title="InnoDB"></a>InnoDB</h6><blockquote>
+<p>InnoDB是一种兼顾高可靠性和高性能的通用存储引擎，5.5后为默认引擎</p>
+<p>特点：</p>
+<ul>
+<li>DML操作遵循ACID模型，支持事务</li>
+<li>行级锁，提高并发访问性能</li>
+<li>支持外键FOREIGN KEY约束，保证数据的完整性和正确性</li>
+</ul>
+<p>文件：</p>
+<ul>
+<li>xxx.ibd：xxx代表的是表名，innoDB引擎的每张表都会对应这样一个表空间文件，存储该表的表结构（frm、sdi）、数据和索引。</li>
+<li>参数：innodb_file_per_table</li>
+</ul>
+</blockquote>
+<h6 id="MyISAM"><a href="#MyISAM" class="headerlink" title="MyISAM"></a>MyISAM</h6><blockquote>
+<p>MySQL早期的默认存储引擎</p>
+<ul>
+<li>不支持事务，不支持外键</li>
+<li>支持表锁，不支持行锁</li>
+<li>访问速度快</li>
+</ul>
+</blockquote>
+<h6 id="Memory"><a href="#Memory" class="headerlink" title="Memory"></a>Memory</h6><blockquote>
+<p>Memory引擎的表数据存储在内存中，作为临时表或缓存使用</p>
+<ul>
+<li>内存存放</li>
+<li>hash索引</li>
+</ul>
+</blockquote>
+<h5 id="存储引擎选择"><a href="#存储引擎选择" class="headerlink" title="存储引擎选择"></a>存储引擎选择</h5><blockquote>
+<p>在选择存储引擎时，应该根据应用系统的特点选择合适的存储引擎。对于复杂的应用系统，还可以根据实际情况选择多种存储引擎进行组合。</p>
+<ul>
+<li>InnoDB：是Mysql的默认存储引擎，支持事务、外键。如果应用对事务的完整性有比较高的要求，在并发条件下要求数据的一致性，数据操作除了插入和查询之外，还包含很多的更新、删除操作，那么InnoDB存储引擎是比较合适的选择。</li>
+<li>MyISAM： 如果应用是以读操作和插入操作为主，只有很少的更新和删除操作，并且对事务的完整性、并发性要求不是很高，那么选择这个存储引擎是非常合适的。</li>
+<li>MEMORY：将所有数据保存在内存中，访问速度快，通常用于临时表及缓存。MEMORY的缺陷就是对表的大小有限制，太大的表无法缓存在内存中，而且无法保障数据的安全性。</li>
+</ul>
+</blockquote>
+<h4 id="索引"><a href="#索引" class="headerlink" title="索引"></a>索引</h4><blockquote>
+<p>索引是用来高效获取数据的数据结构</p>
+</blockquote>
+<h5 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h5><blockquote>
+<p>优点：</p>
+<ul>
+<li>提高数据检索的效率，降低数据库的IO成本</li>
+<li>通过索引列对数据进行排序，降低数据排序的成本，降低CPU的消耗</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>索引列占用大量空间</li>
+<li>降低更新表的速度，增删改查效率低</li>
+</ul>
+</blockquote>
+<h5 id="索引结构"><a href="#索引结构" class="headerlink" title="索引结构"></a>索引结构</h5><blockquote>
+<p>二叉树：顺序插入时，会形成一个链表，查询性能大大降低，层级较深，检索速度慢</p>
+</blockquote>
+<h6 id="B-Tree"><a href="#B-Tree" class="headerlink" title="B-Tree"></a>B-Tree</h6><blockquote>
+<p>多路平衡查找树</p>
+<p>最大度数为5(5阶)，则每个节点最多存储4个key，5个指针，多者则向上分裂</p>
+</blockquote>
+<h6 id="B-Tree-1"><a href="#B-Tree-1" class="headerlink" title="B+Tree"></a>B+Tree</h6><blockquote>
+<p>所有的元素都会存储在叶子节点，形成一个单向列表</p>
+</blockquote>
+<h6 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h6><blockquote>
+<p>哈希索引就是采用一定的hash算法，将键值换算成新的hash值，映射到对应的槽位，然后存储在hash表中</p>
+<ul>
+<li>只能用于对等比较，不支持范围查询</li>
+<li>无法利用索引完成排序操作</li>
+<li>查询效率高</li>
+</ul>
+</blockquote>
+<h5 id="索引分类"><a href="#索引分类" class="headerlink" title="索引分类"></a>索引分类</h5><blockquote>
+<ul>
+<li>主键索引：针对表中主键创建的索引，只能有一个，PRIMARY</li>
+<li>唯一索引：避免同一个表中数据列中值重复，UNIQUE</li>
+<li>常规索引：快速定位特定数据</li>
+<li>全文索引：全文索引查找的是文本中的关键词，而不是比较索引的值，FULLTEXT</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>InnoDB：回表查询</p>
+<ul>
+<li>聚集索引：将数据存储与索引放到一起，索引结构的叶子节点保存了行数据，有且一个</li>
+<li>二级索引：将数据与索引分开存储，索引结构的叶子节点关联对应的主键</li>
+</ul>
+</blockquote>
+<h5 id="索引语法"><a href="#索引语法" class="headerlink" title="索引语法"></a>索引语法</h5><blockquote>
+<p>创建索引：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token punctuation">[</span><span class="token keyword">unique</span><span class="token operator">|</span>fulltext<span class="token punctuation">]</span> <span class="token keyword">index</span> index_name <span class="token keyword">on</span> table_name <span class="token punctuation">(</span>index_col_name<span class="token punctuation">,</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p>查看索引：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> <span class="token keyword">index</span> <span class="token keyword">from</span> table_name<span class="token punctuation">;</span></code></pre>
+
+<p>删除索引：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">drop</span> <span class="token keyword">index</span> index_name <span class="token keyword">on</span> table_name<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h5 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h5><h6 id="SQL执行频率"><a href="#SQL执行频率" class="headerlink" title="SQL执行频率"></a>SQL执行频率</h6><blockquote>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> <span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> <span class="token keyword">status</span></code></pre>
+
+<p>可以提供服务器状态信息</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> <span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> <span class="token keyword">status</span> <span class="token operator">like</span> <span class="token string">'com___'</span><span class="token punctuation">;</span></code></pre>
+
+<p>可以查看当前数据库的增删改查的访问频次</p>
+</blockquote>
+<h6 id="慢查询日志"><a href="#慢查询日志" class="headerlink" title="慢查询日志"></a>慢查询日志</h6><blockquote>
+<p>慢查询日志记录了所有执行时间超过指定参数（long_query_time，默认10秒）的所有SQL语句的日志。</p>
+<p>MySQL的慢查询日志默认没有开启，需要在MySQL的配置文件（etc/my.cnf）中配置</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> variables <span class="token operator">like</span> <span class="token string">'slow_query_log'</span><span class="token punctuation">;</span>  查询慢查询日志情况</code></pre>
+
+<pre class="language-cnf" data-language="cnf"><code class="language-cnf">#开启MySQL慢日志查询开关
+slow_query_log&#x3D;1
+
+#设置慢查询时间
+long_query_time&#x3D;2</code></pre>
+</blockquote>
+<h6 id="profile详情"><a href="#profile详情" class="headerlink" title="profile详情"></a>profile详情</h6><blockquote>
+<p><code>show profiles</code>能够了解耗费之间去向。通过<code>have_profiling</code>参数，能够看到当前MySQL是否支持profile操作</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> @<span class="token variable">@have_profiling</span>； </code></pre>
+
+<p>默认关闭，开启方式</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> @<span class="token variable">@profiling</span><span class="token punctuation">;</span>
+
+<span class="token keyword">set</span> profiling<span class="token operator">=</span><span class="token number">1</span><span class="token punctuation">;</span></code></pre>
+
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token comment">#查看指定query_id的SQL语句各个阶段的耗时情况</span>
+<span class="token keyword">show</span> profile <span class="token keyword">for</span> query query_id<span class="token punctuation">;</span>
+
+<span class="token comment">#查看指定query_id的SQL语句CPU的使用情况</span>
+<span class="token keyword">show</span> profile cpu <span class="token keyword">for</span> query query_id<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="explain执行计划"><a href="#explain执行计划" class="headerlink" title="explain执行计划"></a>explain执行计划</h6><blockquote>
+<p>explain或者DESC命令获取MySQL如何执行select语句的信息，包括在select语句执行过程中表如何连接和连接的顺序</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql">直接在语句前加上关键字<span class="token keyword">explain</span>或<span class="token keyword">desc</span>
+<span class="token keyword">explain</span> <span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表名 <span class="token keyword">where</span> 条件<span class="token punctuation">;</span></code></pre>
+
+<ul>
+<li>id：表示查询中执行select子句或者操作表的顺序（id相同，从上到下，不同越大先执行）</li>
+<li>select_type：<ul>
+<li>simple：简单表，即不用表连接和子查询</li>
+<li>primary：主查询，即外层的查询</li>
+<li>union：union联合查询中的第二个或者后面的语句</li>
+<li>subquery：select/where之后包含了子查询语句</li>
+</ul>
+</li>
+<li>type：表示连接类型，性能由好到差：null，system，const，eq_ref，ref，range，index，all</li>
+<li>possible_key：显示可能应用在这张表上的索引，一个或多个</li>
+<li>key：实际使用的索引，如果为null，则表示没有使用索引</li>
+<li>key_len：表示索引中使用的字节数，该值为索引字段中最大可能长度，并非实际长度，越短越好</li>
+<li>rows：MySQL认为必须要执行查询的行数，在innodb引擎的表中，是一个估计值，不准确</li>
+<li>filtered：表示返回结果的行数占需读取行数的百分比，filtered越大越好</li>
+</ul>
+</blockquote>
+<h5 id="使用规则"><a href="#使用规则" class="headerlink" title="使用规则"></a>使用规则</h5><h6 id="最左前缀法则"><a href="#最左前缀法则" class="headerlink" title="最左前缀法则"></a>最左前缀法则</h6><blockquote>
+<p>如果索引了多列（联合索引，要遵循最左前缀法则。</p>
+<p>根据联合索引执行计划</p>
+<p>最左前缀法则指查询从索引的最左列开始，并且不跳过索引中的列。如果跳过，后面的索引将失效</p>
+</blockquote>
+<h6 id="索引失效"><a href="#索引失效" class="headerlink" title="索引失效"></a>索引失效</h6><blockquote>
+<ul>
+<li>索引列运算操作</li>
+<li>字符串无引号</li>
+<li>头部模糊匹配（尾部模糊匹配不会失效）</li>
+</ul>
+</blockquote>
+<h6 id="数据分布影响"><a href="#数据分布影响" class="headerlink" title="数据分布影响"></a>数据分布影响</h6><blockquote>
+<p>如果MySQL评估使用索引比全表扫描慢，则不使用索引</p>
+</blockquote>
+<h6 id="SQL提示"><a href="#SQL提示" class="headerlink" title="SQL提示"></a>SQL提示</h6><blockquote>
+<p>在SQL语句中加入人为提示来优化操作、</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> xxx <span class="token keyword">use</span><span class="token operator">|</span><span class="token keyword">ignore</span><span class="token operator">|</span><span class="token keyword">force</span> <span class="token keyword">index</span><span class="token punctuation">(</span>index_xxx<span class="token punctuation">)</span> <span class="token keyword">where</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+
+<ul>
+<li>use index：建议</li>
+<li>ignore index：忽略</li>
+<li>force index：强制</li>
+</ul>
+</blockquote>
+<h6 id="覆盖索引"><a href="#覆盖索引" class="headerlink" title="覆盖索引"></a>覆盖索引</h6><blockquote>
+<p>尽量使用覆盖索引：查询使用了索引，并且需要返回的列，在该索引中已经全部能够找到），减少<code>select *</code> </p>
+</blockquote>
+<h6 id="前缀索引"><a href="#前缀索引" class="headerlink" title="前缀索引"></a>前缀索引</h6><blockquote>
+<p>对于字符串字段类型，索引很长，浪费磁盘IO，影响效率</p>
+<p>取字符串前缀建立索引，提高效率</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">index</span> idx_xxx <span class="token keyword">on</span> table_name <span class="token punctuation">(</span>字段列表<span class="token punctuation">(</span>n<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p><code>n</code>代表选择字段列表的前n个字符建立索引</p>
+</blockquote>
+<blockquote>
+<p>可以根据索引的选择性决定前缀长度，而选择性指不重复的索引值和数据表的记录总数的总值</p>
+<p>唯一索引选择性为1,性能最高</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> exxx<span class="token punctuation">)</span><span class="token operator">|</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">from</span> tb_xxx<span class="token punctuation">;</span>
+<span class="token keyword">select</span> <span class="token function">count</span><span class="token punctuation">(</span><span class="token keyword">distinct</span> substring<span class="token punctuation">(</span>exxx<span class="token punctuation">,</span><span class="token number">1</span><span class="token punctuation">,</span><span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token operator">|</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token operator">*</span><span class="token punctuation">)</span> <span class="token keyword">from</span> tb_xxx<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="单列索引和联合索引"><a href="#单列索引和联合索引" class="headerlink" title="单列索引和联合索引"></a>单列索引和联合索引</h6><blockquote>
+<p>多个查询条件，建议建立联合索引</p>
+</blockquote>
+<h4 id="SQL优化"><a href="#SQL优化" class="headerlink" title="SQL优化"></a>SQL优化</h4><h5 id="插入数据"><a href="#插入数据" class="headerlink" title="插入数据"></a>插入数据</h5><blockquote>
+<p><code>insert</code>优化：</p>
+<ul>
+<li>批量插入</li>
+<li>手动提交事务</li>
+<li>主键顺序插入</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>大批量插入数据：</p>
+<p>可以使用MySQL数据库提供的<code>load</code>指令进行插入</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token comment">#客户端连接服务端时，加上参数 --local-infile</span>
+mysql <span class="token comment">--local-infile -u root -p</span>
+<span class="token comment">#设置全局参数local_infile为1，开启从本地加载文件导入数据的开关</span>
+<span class="token keyword">set</span> <span class="token keyword">global</span> local_infile<span class="token operator">=</span><span class="token number">1</span>
+<span class="token comment">#执行load指令将准备好的数据加载到表结构中</span>
+<span class="token keyword">load</span> <span class="token keyword">data</span> <span class="token keyword">local</span> <span class="token keyword">infile</span> <span class="token string">'/root/sql'</span> <span class="token keyword">into</span> <span class="token keyword">table</span> <span class="token string">'xxx'</span> <span class="token keyword">fields</span> <span class="token keyword">terminated</span> <span class="token keyword">by</span> <span class="token string">','</span> <span class="token keyword">lines</span> <span class="token keyword">terminated</span> <span class="token keyword">by</span> <span class="token string">'\n'</span><span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h5 id="主键优化"><a href="#主键优化" class="headerlink" title="主键优化"></a>主键优化</h5><blockquote>
+<ul>
+<li>尽量降低主键长度</li>
+<li>插入数据时，尽量选择顺序插入，选择主键自增<code>auto_increment</code></li>
+<li>尽量UID或身份证号做主键</li>
+<li>避免修改主键</li>
+</ul>
+</blockquote>
+<h5 id="排序order-by优化"><a href="#排序order-by优化" class="headerlink" title="排序order by优化"></a>排序order by优化</h5><blockquote>
+<ul>
+<li>Using filesort：通过表的索引或全表扫描，读取满足条件的数据行，然后在排序缓冲区中完成排序操作，所有不是通过索引直接返回排序结果的排序都叫Filesort排序</li>
+<li>Using index：通过有序索引顺序扫描直接返回有序数据，不需要额外排序，操作效率高</li>
+</ul>
+</blockquote>
+<h5 id="group-by优化"><a href="#group-by优化" class="headerlink" title="group by优化"></a>group by优化</h5><blockquote>
+<p>建立联合索引后可以利用索引进行分组查询，提高效率</p>
+</blockquote>
+<h5 id="limit分页优化"><a href="#limit分页优化" class="headerlink" title="limit分页优化"></a>limit分页优化</h5><blockquote>
+<p>通过覆盖索引或子查询将大数据limit查询某些数据的排序效率大大提高</p>
+</blockquote>
+<h5 id="count优化"><a href="#count优化" class="headerlink" title="count优化"></a>count优化</h5><blockquote>
+<p>InnoDB是累计计数</p>
+<p>优化方式：自己计数</p>
+<ul>
+<li>count(*)：总记录数，按行累加</li>
+<li>count(主键)：总记录数，取主键id返回服务层，直接进行累加</li>
+<li>count(字段)：非null记录数</li>
+<li>count(1)：总记录数，对每一层置1，进行累加</li>
+</ul>
+</blockquote>
+<h5 id="update优化"><a href="#update优化" class="headerlink" title="update优化"></a>update优化</h5><blockquote>
+<p>没有索引，行锁将升级为表锁</p>
+</blockquote>
+<h4 id="视图"><a href="#视图" class="headerlink" title="视图"></a>视图</h4><blockquote>
+<p>视图：虚拟存在的表，行和列数据来自自定义视图的查询中使用的表，并且是在使用视图时动态生成</p>
+<p>视图保存了查询的SQL逻辑，不保留查询结果</p>
+<p>类似额外存储数据库自选内容，方便快捷</p>
+</blockquote>
+<h5 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h5><h6 id="创建视图"><a href="#创建视图" class="headerlink" title="创建视图"></a>创建视图</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token punctuation">[</span><span class="token operator">or</span> <span class="token keyword">replace</span><span class="token punctuation">]</span> <span class="token keyword">view</span> 视图名称<span class="token punctuation">[</span><span class="token punctuation">(</span>列名列表<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token keyword">select</span>语句 <span class="token punctuation">[</span><span class="token keyword">with</span> <span class="token punctuation">[</span><span class="token keyword">cascaded</span><span class="token operator">|</span><span class="token keyword">local</span><span class="token punctuation">]</span> <span class="token keyword">check</span> <span class="token keyword">option</span><span class="token punctuation">]</span></code></pre>
+
+<h6 id="查询视图"><a href="#查询视图" class="headerlink" title="查询视图"></a>查询视图</h6><pre class="language-sql" data-language="sql"><code class="language-sql">查看创建视图语句
+<span class="token keyword">show</span> <span class="token keyword">create</span> <span class="token keyword">view</span> 视图名称<span class="token punctuation">;</span>
+查看视图数据
+<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> 视图名称<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="修改视图"><a href="#修改视图" class="headerlink" title="修改视图"></a>修改视图</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token punctuation">[</span><span class="token operator">or</span> <span class="token keyword">replace</span><span class="token punctuation">]</span> <span class="token keyword">view</span> 视图名称<span class="token punctuation">[</span><span class="token punctuation">(</span>列名列表<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token keyword">select</span>语句 <span class="token punctuation">[</span><span class="token keyword">with</span><span class="token operator">|</span><span class="token keyword">cascaded</span><span class="token operator">|</span><span class="token keyword">local</span><span class="token operator">|</span><span class="token keyword">check</span> <span class="token keyword">option</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">alter</span> <span class="token keyword">view</span> 视图名称<span class="token punctuation">[</span><span class="token punctuation">(</span>列名列表<span class="token punctuation">)</span><span class="token punctuation">]</span> <span class="token keyword">as</span> <span class="token keyword">select</span>语句 <span class="token punctuation">[</span><span class="token keyword">with</span><span class="token operator">|</span><span class="token keyword">cascaded</span><span class="token operator">|</span><span class="token keyword">local</span><span class="token operator">|</span><span class="token keyword">check</span> <span class="token keyword">option</span><span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="删除视图"><a href="#删除视图" class="headerlink" title="删除视图"></a>删除视图</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">drop</span> <span class="token keyword">view</span> <span class="token punctuation">[</span><span class="token keyword">if</span> <span class="token keyword">exists</span><span class="token punctuation">]</span> 视图名称 <span class="token punctuation">[</span><span class="token punctuation">,</span>视图名称<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span></code></pre>
+
+<h5 id="检查选项"><a href="#检查选项" class="headerlink" title="检查选项"></a>检查选项</h5><blockquote>
+<p>使用<code>with check option</code>子句创建视图时，MySQL会通过视图检查正在更改的每个行，以使其符合视图的定义。</p>
+<p>MySQL允许基于一个视图创建另一个视图。</p>
+<p>为了确定检查范围，mysql提供了两个选项：</p>
+<ul>
+<li>cascaded(默认)：级联所有层级的视图限制条件，共享限制条件</li>
+<li>local：仅仅向下级联限制条件</li>
+</ul>
+</blockquote>
+<h5 id="更新及作用"><a href="#更新及作用" class="headerlink" title="更新及作用"></a>更新及作用</h5><h6 id="视图更新"><a href="#视图更新" class="headerlink" title="视图更新"></a>视图更新</h6><blockquote>
+<p>视图中的行与基础表中的行必须存在一对一的关系。</p>
+<p>下列情况视图不能更新：</p>
+<ul>
+<li>聚合函数或窗口函数（sum() , min() , max() , count()等）</li>
+<li>distinct</li>
+<li>group by</li>
+<li>having</li>
+<li>union或者union all</li>
+</ul>
+</blockquote>
+<h6 id="作用"><a href="#作用" class="headerlink" title="作用"></a>作用</h6><blockquote>
+<ul>
+<li>简单：简化用户对数据的理解，简化操作。常用查询可被定义为视图</li>
+<li>安全：数据库授权不能授权到特定行和列，通过视图用户只能查询和修改他们所能见到的数据</li>
+<li>数据独立：视图可帮助用户屏蔽真实表结构变化带来的影响</li>
+</ul>
+</blockquote>
+<h4 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h4><p>事先经过编译并存储子啊数据库中的一段SQL语句集合，减少数据在数据库和应用服务器之间的传输，提高效率。</p>
+<h5 id="基本用法-1"><a href="#基本用法-1" class="headerlink" title="基本用法"></a>基本用法</h5><h6 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">procedure</span> 存储过程名称<span class="token punctuation">(</span><span class="token punctuation">[</span>参数列表<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">begin</span>
+	<span class="token comment">--sql语句</span>
+<span class="token keyword">end</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="调用"><a href="#调用" class="headerlink" title="调用"></a>调用</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">call</span> 名称<span class="token punctuation">(</span><span class="token punctuation">[</span>参数<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="查看"><a href="#查看" class="headerlink" title="查看"></a>查看</h6><pre class="language-sql" data-language="sql"><code class="language-sql">查询指定数据库的存储过程及状态信息
+<span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> information_schema<span class="token punctuation">.</span>routines <span class="token keyword">where</span> routine_schema<span class="token operator">=</span><span class="token string">'xxx'</span><span class="token punctuation">;</span>
+查询某个存储过程的定义
+<span class="token keyword">show</span> <span class="token keyword">create</span> <span class="token keyword">procedure</span> 存储过程名称</code></pre>
+
+<h6 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">drop</span> <span class="token keyword">procedure</span> <span class="token punctuation">[</span><span class="token keyword">if</span> <span class="token keyword">exists</span><span class="token punctuation">]</span> 存储过程名称<span class="token punctuation">;</span></code></pre>
+
+<p>在命令行中，执行创建存储过程的SQL时，需要通过关键字<code>delimiter</code>指定SQL语句的结束符</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">delimiter</span> 结束符号<span class="token punctuation">;</span></code></pre>
+
+<h5 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h5><h6 id="系统变量"><a href="#系统变量" class="headerlink" title="系统变量"></a>系统变量</h6><blockquote>
+<p>系统变量是MySQL服务器提供，非用户定义，属于服务器层面。分为全局变量(Global)、会话变量(Session)</p>
+</blockquote>
+<blockquote>
+<p>查看系统变量</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> <span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> variables<span class="token punctuation">;</span>	查看所有系统变量
+<span class="token keyword">show</span> <span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> variables <span class="token operator">like</span> <span class="token string">'...'</span><span class="token punctuation">;</span>	模糊匹配系统变量
+<span class="token keyword">select</span> @@<span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> 系统变量名<span class="token punctuation">;</span>	查看指定变量</code></pre>
+</blockquote>
+<blockquote>
+<p>设置系统变量</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">set</span> <span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> 系统变量名<span class="token operator">=</span>值<span class="token punctuation">;</span>
+<span class="token keyword">set</span> @@<span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> 系统变量名<span class="token operator">=</span>值<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="用户定义变量"><a href="#用户定义变量" class="headerlink" title="用户定义变量"></a>用户定义变量</h6><blockquote>
+<p>用户定义变量不用提前声明，直接‘’@变量名‘’使用，其作用域为当前连接</p>
+</blockquote>
+<blockquote>
+<p>赋值</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">set</span> <span class="token variable">@var_name</span><span class="token operator">=</span>expr<span class="token punctuation">[</span><span class="token punctuation">,</span><span class="token variable">@var_name</span><span class="token operator">=</span>expr<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span>
+<span class="token keyword">set</span> <span class="token variable">@var_name</span>:<span class="token operator">=</span>expr<span class="token punctuation">[</span><span class="token punctuation">,</span><span class="token variable">@var_name</span>:<span class="token operator">=</span>expr<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token variable">@var_name</span>:<span class="token operator">=</span>expr<span class="token punctuation">[</span><span class="token punctuation">,</span><span class="token variable">@var_name</span>:<span class="token operator">=</span>expr<span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span>
+<span class="token keyword">select</span> 字段名 <span class="token keyword">into</span> <span class="token variable">@var_name</span> <span class="token keyword">from</span> 表名<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<blockquote>
+<p>使用</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token variable">@var_name</span><span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="局部变量"><a href="#局部变量" class="headerlink" title="局部变量"></a>局部变量</h6><blockquote>
+<p>局部变量访问之前，需要<code>declare</code>声明。可作为存储过程内的局部变量和输入参数，范围在<code>begin...end</code>内</p>
+</blockquote>
+<blockquote>
+<p>声明</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">declare</span> 变量名 变量类型<span class="token punctuation">[</span><span class="token keyword">default</span> 默认值<span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+</blockquote>
+<blockquote>
+<p>赋值</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">set</span> 变量名<span class="token operator">=</span>值<span class="token punctuation">;</span>
+<span class="token keyword">set</span> 变量名:<span class="token operator">=</span>值<span class="token punctuation">;</span>
+<span class="token keyword">select</span> 字段名 <span class="token keyword">into</span> 变量名 <span class="token keyword">from</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h5 id="流程组成部分"><a href="#流程组成部分" class="headerlink" title="流程组成部分"></a>流程组成部分</h5><h6 id="if"><a href="#if" class="headerlink" title="if"></a>if</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">if</span> 条件<span class="token number">1</span> <span class="token keyword">then</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">elseif</span> 条件<span class="token number">2</span> <span class="token keyword">then</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">else</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">end</span> <span class="token keyword">if</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h6><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>含义</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>in</td>
+<td>该类参数作为输入，也就是需要调用时传入值</td>
+<td>默认</td>
+</tr>
+<tr>
+<td>out</td>
+<td>该类参数作为输出，也就是该参数可以作为返回值</td>
+<td></td>
+</tr>
+<tr>
+<td>inout</td>
+<td>既可以作为输入参数，也可以作为输出参数</td>
+<td></td>
+</tr>
+</tbody></table>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">procedure</span> 存储过程名称<span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token operator">in</span><span class="token operator">|</span><span class="token keyword">out</span><span class="token operator">|</span><span class="token keyword">inout</span> 参数名 参数类型<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">begin</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">end</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="case"><a href="#case" class="headerlink" title="case"></a>case</h6><blockquote>
+<p>语法1</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">case</span> case_value
+	<span class="token keyword">when</span> when_value1 <span class="token keyword">then</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+	<span class="token punctuation">[</span><span class="token keyword">else</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span>
+<span class="token keyword">end</span> <span class="token keyword">case</span><span class="token punctuation">;</span></code></pre>
+
+<p>语法2</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">case</span>
+	<span class="token keyword">when</span> xxx <span class="token keyword">then</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+	<span class="token punctuation">[</span><span class="token keyword">else</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span>
+<span class="token keyword">end</span> <span class="token keyword">case</span><span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="while"><a href="#while" class="headerlink" title="while"></a>while</h6><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">while</span> 条件 <span class="token keyword">do</span>
+<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">end</span> <span class="token keyword">while</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="repeat"><a href="#repeat" class="headerlink" title="repeat"></a>repeat</h6><p>满足条件退出循环</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql">先执行一次循环，判断逻辑是否满足，满足则退出，不满足继续循环
+<span class="token keyword">repeat</span>
+	<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+	until 条件
+<span class="token keyword">end</span> <span class="token keyword">repeat</span><span class="token punctuation">;</span></code></pre>
+
+<h6 id="loop"><a href="#loop" class="headerlink" title="loop"></a>loop</h6><blockquote>
+<p>loop实现简单的循环，可以实现死循环</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token punctuation">[</span>begin_label:<span class="token punctuation">]</span> <span class="token keyword">loop</span>
+	<span class="token keyword">SQL</span>逻辑<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+<span class="token keyword">end</span> <span class="token keyword">loop</span> <span class="token punctuation">[</span>end_label<span class="token punctuation">]</span><span class="token punctuation">;</span></code></pre>
+
+
+
+<ul>
+<li>leave：配合循环使用，退出循环</li>
+<li>iterate：必须用在循环中，作用是跳过当前循环剩下的语句，直接进入下一次循环</li>
+</ul>
+</blockquote>
+<h6 id="游标cursor"><a href="#游标cursor" class="headerlink" title="游标cursor"></a>游标cursor</h6><blockquote>
+<p>游标用来存储查询结果集的数据类型，在存储过程和函数中可以使用游标对结果集进行循环处理。</p>
+<p>游标使用包括游标的声明、open、fetch和close</p>
+</blockquote>
+<blockquote>
+<p>声明游标</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">declare</span> 游标名称 <span class="token keyword">cursor</span> <span class="token keyword">for</span> 查询语句<span class="token punctuation">;</span></code></pre>
+
+<p>打开游标</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">open</span> 游标名称；</code></pre>
+
+<p>获取游标记录</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">fetch</span> 游标名称 <span class="token keyword">into</span> 变量<span class="token punctuation">;</span></code></pre>
+
+<p>关闭游标</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">close</span> 游标名称<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="条件处理程序"><a href="#条件处理程序" class="headerlink" title="条件处理程序"></a>条件处理程序</h6><blockquote>
+<p>条件处理程序（handler）可以用来定义在流程控制结构执行过程中遇到问题时相应的处理步骤</p>
+</blockquote>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">declare</span> handler_action <span class="token keyword">handler</span> <span class="token keyword">for</span> condition_value <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> statement<span class="token punctuation">;</span>
+
+handler_action
+	<span class="token keyword">continue</span>:继续执行当前程序
+	<span class="token keyword">exit</span>:终止执行当前程序
+
+condition_value
+	sqlstate sqlstate_value:状态码，如<span class="token number">02000</span>
+	sqlwarning:所有以<span class="token number">01</span>开头的sqlstate代码的简写
+	<span class="token operator">not</span> found:所有以<span class="token number">02</span>开头的sqlstate代码的简写	
+	sqlexception:所有没被sqlwarning或<span class="token operator">not</span> found捕获的sqlstate代码的简写</code></pre>
+
+<h5 id="存储函数"><a href="#存储函数" class="headerlink" title="存储函数"></a>存储函数</h5><p>存储函数是有返回值的存储过程，存储函数的类型只能是in类型</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">function</span> 存储函数名称<span class="token punctuation">(</span><span class="token punctuation">[</span>参数列表<span class="token punctuation">]</span><span class="token punctuation">)</span>
+<span class="token keyword">return</span> <span class="token keyword">type</span> <span class="token punctuation">[</span>characteristic<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">]</span>
+<span class="token keyword">begin</span>
+	<span class="token comment">--SQL语句</span>
+	<span class="token keyword">return</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span>
+<span class="token keyword">end</span><span class="token punctuation">;</span></code></pre>
+
+<p><code>characteristic</code>说明：</p>
+<ul>
+<li><code>deterministic</code>：相同的输入参数总是产生相同的结果</li>
+<li><code>no sql</code>：不包括SQL语句</li>
+<li><code>reads sql data</code>：包含读取数据的语句，但不包含写入数据的语句</li>
+</ul>
+<h4 id="触发器-log"><a href="#触发器-log" class="headerlink" title="触发器(log)"></a>触发器(log)</h4><blockquote>
+<p>触发器是与表有关的数据库对象，指在增删改前后，触发并执行触发器中定义的SQL语句集合。</p>
+<p>触发器可协助应用在数据库端确保数据的完整性，日志记录，数据校验等操作。</p>
+<p>使用别名OLD和NEW来引用触发器中发生变化的记录内容。当前触发器只支持行级触发，不支持语句触发</p>
+</blockquote>
+<h5 id="创建-1"><a href="#创建-1" class="headerlink" title="创建"></a>创建</h5><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">trigger</span> trigger_name
+
+before<span class="token operator">|</span><span class="token keyword">after</span> <span class="token keyword">insert</span><span class="token operator">|</span><span class="token keyword">update</span><span class="token operator">|</span><span class="token keyword">delete</span>
+
+<span class="token keyword">on</span> tbline_name <span class="token keyword">for each row</span> <span class="token comment">--行级触发器</span>
+
+<span class="token keyword">begin</span>
+	tigger_stmt
+<span class="token keyword">end</span><span class="token punctuation">;</span></code></pre>
+
+<h5 id="查看-1"><a href="#查看-1" class="headerlink" title="查看"></a>查看</h5><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">show</span> triggers<span class="token punctuation">;</span></code></pre>
+
+<h5 id="删除-1"><a href="#删除-1" class="headerlink" title="删除"></a>删除</h5><pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">drop</span> <span class="token keyword">trigger</span> <span class="token punctuation">[</span>schema_name<span class="token punctuation">.</span><span class="token punctuation">]</span>trigger_name<span class="token punctuation">;</span> <span class="token comment">--未指定schema_name，默认当前数据库</span></code></pre>
+
+<h4 id="锁"><a href="#锁" class="headerlink" title="锁"></a>锁</h4><blockquote>
+<p>锁是计算机协调多个进程或线程并发访问某一资源的机制。</p>
+<p>保证数据并发访问的一致性、有效性。</p>
+<ul>
+<li>全局锁：锁定数据库中所有表</li>
+<li>表级锁：每次操作锁住整张表</li>
+<li>行级锁：每次操作锁住对应的行数据</li>
+</ul>
+</blockquote>
+<h5 id="全局锁"><a href="#全局锁" class="headerlink" title="全局锁"></a>全局锁</h5><p>全局锁将整个数据库实例加锁，加锁后处于只读状态。</p>
+<p>典型的应用场景：全库的逻辑备份，对所有表进行锁定，从而获取一致性视图，保证数据的完整性</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql">加全局锁
+flush <span class="token keyword">tables</span> <span class="token keyword">with</span> <span class="token keyword">read</span> <span class="token keyword">lock</span><span class="token punctuation">;</span>
+
+数据备份
+mysqldump <span class="token operator">-</span>h主机地址 <span class="token operator">-</span>uroot <span class="token operator">-</span>pxxxx 数据库名称 <span class="token operator">></span> 备份地址<span class="token punctuation">.</span><span class="token keyword">sql</span>
+
+解锁
+<span class="token keyword">unlock</span> <span class="token keyword">tables</span><span class="token punctuation">;</span></code></pre>
+
+<h5 id="表级锁"><a href="#表级锁" class="headerlink" title="表级锁"></a>表级锁</h5><p>表级锁，每次操作锁住整张表，发生锁冲突的概率最高，并发度较低</p>
+<ul>
+<li>表锁</li>
+<li>元数据锁</li>
+<li>意向锁</li>
+</ul>
+<h6 id="表锁"><a href="#表锁" class="headerlink" title="表锁"></a>表锁</h6><blockquote>
+<ul>
+<li>表共享读锁（read lock）只能读</li>
+<li>表独占写锁（write lock）读写都阻塞</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>语法：</p>
+<ul>
+<li>加锁：<code>lock tables 表名... read|write</code></li>
+<li>释放锁：<code>unlock tables / 客户端断开连接</code></li>
+</ul>
+</blockquote>
+<h6 id="元数据锁-MDL"><a href="#元数据锁-MDL" class="headerlink" title="元数据锁(MDL)"></a>元数据锁(MDL)</h6><blockquote>
+<p>MDL加锁过程是系统自动控制，无需显式使用，在访问一张表时会自动加上。MDL锁主要作用是维护表元数据的数据一致性，在表上有活动事务时，不可以对元数据进行写入操作 </p>
+</blockquote>
+<h6 id="意向锁"><a href="#意向锁" class="headerlink" title="意向锁"></a>意向锁</h6><blockquote>
+<p>为了避免DML在执行时，加的行锁与表锁的冲突，在InnoDB中引入了意向锁，使得表锁不用检查每行数据是否加锁，使用意向锁来减少表锁的检查。</p>
+<ul>
+<li>意向共享锁：由语句<code>select ... lock in share mode</code>添加<ul>
+<li>与表锁共享锁(read)兼容，与表锁排他锁(write)互斥</li>
+</ul>
+</li>
+<li>意向排他锁：由<code>insert、update、delete、select ... for update</code>添加<ul>
+<li>与表锁共享锁(read)及排他锁(write)都互斥，意向锁之间不会互斥</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<h5 id="行级锁"><a href="#行级锁" class="headerlink" title="行级锁"></a>行级锁</h5><p>行级锁，每次操作锁住对应的行数据。锁定粒度小，发生锁冲突的概率低，并发度最高。</p>
+<blockquote>
+<p>InnoDB的数据是基于索引组织的，行锁是通过对索引上的索引项加锁来实现的，而不是对记录加的锁</p>
+<ul>
+<li>行锁（record lock）：锁定单个行记录的锁，防止其他事务对此进行update和delete</li>
+<li>间隙锁（gap lock）：锁定索引记录间隙（不包含该记录），确保索引记录间隙不变，防止其他事务在这个间隙进行insert，产生幻读</li>
+<li>临键锁（next-key lock）：行锁和间隙锁组合，同时锁住数据，并锁住数据前面的间隙gap</li>
+</ul>
+</blockquote>
+<h6 id="行锁"><a href="#行锁" class="headerlink" title="行锁"></a>行锁</h6><blockquote>
+<ul>
+<li>共享锁（S）：允许一个事务去读一行，阻止其他事务获得相同数据集的排他锁</li>
+<li>排他锁（X）：允许获取排他锁的事务更新数据，阻止其他事务获得相同数据集的共享锁和排他锁</li>
+</ul>
+</blockquote>
+<blockquote>
+<ul>
+<li>增删改自动增加 排他锁</li>
+<li>select正常查询不加任何锁</li>
+<li>select…lock in share mode 添加共享锁</li>
+<li>select … for update 添加排他锁</li>
+</ul>
+</blockquote>
+<h6 id="间隙锁和临键锁"><a href="#间隙锁和临键锁" class="headerlink" title="间隙锁和临键锁"></a>间隙锁和临键锁</h6><blockquote>
+<p>默认情况下，InnoDB在repeatable read事务隔离级别运行，InnoDB使用next-key锁进行搜索和索引扫描，防止幻读</p>
+<ol>
+<li>索引上的等值查询（唯一索引），给不存在的记录加锁时，优化为间隙锁</li>
+<li>索引上的等值查询（普通索引），向右遍历时最后一个值不满足查询需求时，next-key lock 退化为间隙锁</li>
+<li>索引上的范围查询（唯一索引），会访问到不满足条件的第一个值为止</li>
+</ol>
+<p>间隙锁唯一目的是防止其他事务插入间隙。</p>
+<p>间隙锁可以共存，一个事务采用的间隙锁不会阻止另一个事务在同一个间隙上采用间隙锁</p>
+</blockquote>
+<h4 id="InnoDB引擎"><a href="#InnoDB引擎" class="headerlink" title="InnoDB引擎"></a>InnoDB引擎</h4><h5 id="逻辑存储结构"><a href="#逻辑存储结构" class="headerlink" title="逻辑存储结构"></a>逻辑存储结构</h5><ul>
+<li>表空间（ibd文件）：一个mysql实例可以对应多个表空间，用于存储记录、索引等数据。</li>
+<li>段，分为数据段、索引段、回滚段，InnoDB是索引组织表，数据段就是B+树的叶子节点，索引段为非叶子节点。段用来管理多个Extent(区)。</li>
+<li>区，表空间的单元结构，每个区大小为1M。默认情况下，InnoDB存储引擎页大小为16K，即一个区中一共有64个连续的页</li>
+<li>页，InnoDB存储引擎磁盘管理的最小单元，默认16k。保证连续性，每次申请4-5个区</li>
+<li>行，数据按行存放</li>
+</ul>
+<h5 id="事务原理"><a href="#事务原理" class="headerlink" title="事务原理"></a>事务原理</h5><h6 id="redo-log"><a href="#redo-log" class="headerlink" title="redo log"></a>redo log</h6><blockquote>
+<p>重做日志，记录的是事务提交时数据页的物理修改，是用来实现事务的持久性。</p>
+<p>该日志文件由两部分组成:重做日志缓冲（redo log buffer)以及重做日志文件（(redo log file) ,前者是在内存中，后者在磁盘中。当事务提交之后会把所有修改信息都存到该日志文件中,用于在刷新脏页到磁盘,发生错误时,进行数据恢复使用。 </p>
+</blockquote>
+<h6 id="undo-log"><a href="#undo-log" class="headerlink" title="undo log"></a>undo log</h6><blockquote>
+<p>回滚日志，用于记录数据被修改前的信息，作用包含两个：提供回滚和 MVCC（多版本并发控制）。</p>
+<p>undo log和redo log记录物理日志不一样，它是逻辑日志。可以认为当delete一条记录时，undo log中会记录一条对应的insert记录，反之亦然，当update一条记录时，它记录一条对应相反的update记录。当执行rollback时，就可以从undo log中的逻辑记录读取到相应的内容并进行回滚。</p>
+<p>Undo log销毁：undo log在事务执行时产生，事务提交时，并不会立即删除undo log，因为这些日志可能还用于MVCC。</p>
+<p>Undo log存储：undo log采用段的方式进行管理和记录，存放在前面介绍的rollback segment 回滚段中，内部包含1024个undo log  segment。</p>
+</blockquote>
+<h5 id="MVVC"><a href="#MVVC" class="headerlink" title="MVVC"></a>MVVC</h5><h6 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h6><blockquote>
+<p>当前读</p>
+<ul>
+<li>读取的是记录的最新版本，读取时还要保证其他并发事务不能修改当前记录，会对读取的记录进行加锁。对于我们日常的操作，如:select… lock in share mode(共享锁)，select .. for update、update、insert、delete(排他锁)都是一种当前读。</li>
+</ul>
+<p>快照读</p>
+<ul>
+<li>简单的select（不加锁）就是快照读，快照读，读取的是记录数据的可见版本，有可能是历史数据，不加锁，是非阻塞读。</li>
+<li>Read Committed：每次select，都生成一个快照读。</li>
+<li>Repeatable Read：开启事务后第一个select语句才是快照读的地方。</li>
+<li>Serializable：快照读会退化为当前读。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>全称 Multi-Version Concurrency Control，多版本并发控制。指维护一个数据的多个版本，使得读写操作没有冲突，快照读为MySQL实现</p>
+<p>MVCC提供了一个非阻塞读功能。MVCC的具体实现，还需要依赖于数据库记录中的三个隐式字段、undo log日志、readView。</p>
+</blockquote>
+<h6 id="隐藏字段"><a href="#隐藏字段" class="headerlink" title="隐藏字段"></a>隐藏字段</h6><table>
+<thead>
+<tr>
+<th>隐藏字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DB_TRX_ID</td>
+<td>最近修改事务ID，记录插入这条记录或最后一次修改该记录的事务ID</td>
+</tr>
+<tr>
+<td>DB_ROLL_PTR</td>
+<td>回滚指针，指向这条记录的上一个版本，用于配合undo log，指向上一个版本</td>
+</tr>
+<tr>
+<td>DB_ROW_ID</td>
+<td>隐藏主键，如果表结构没有指定主键，将会生成该隐藏字段</td>
+</tr>
+</tbody></table>
+<h6 id="undo-log-1"><a href="#undo-log-1" class="headerlink" title="undo log"></a>undo log</h6><blockquote>
+<p>回滚日志，在insert、update、delete的时候产生的便于数据回滚的日志。</p>
+<p>当insert的时候，产生的undo log日志只在回滚时需要，在事务提交后，可被立即删除。</p>
+<p>而update、delete的时候，产生的undolog日志不仅在回滚时需要，在快照读时也需要，不会立即被删除。</p>
+</blockquote>
+<h6 id="undo-log版本链"><a href="#undo-log版本链" class="headerlink" title="undo log版本链"></a>undo log版本链</h6><blockquote>
+<p>不同事务或相同事务对同一条记录进行修改，会导致该记录的undolog生成一条记录版本链表，链表的头部是最新的旧记录，链表尾部是最早的旧记录。</p>
+</blockquote>
+<h6 id="readview"><a href="#readview" class="headerlink" title="readview"></a>readview</h6><blockquote>
+<p>readview（读视图）是快照读SQL执行时MVCC提取数据的依据，记录并维护系统当前活跃的事务（未提交的）id</p>
+<p>四个核心字段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>m_ids</td>
+<td>当前活跃的事务id集合</td>
+</tr>
+<tr>
+<td>min_trx_id</td>
+<td>最小活跃事务id</td>
+</tr>
+<tr>
+<td>max_trx_id</td>
+<td>预分配事务id，当前最大事务id+1</td>
+</tr>
+<tr>
+<td>creator_trx_id</td>
+<td>readview创建者的事务id</td>
+</tr>
+</tbody></table>
+</blockquote>
+<h4 id="系统数据库"><a href="#系统数据库" class="headerlink" title="系统数据库"></a>系统数据库</h4><table>
+<thead>
+<tr>
+<th>数据库</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>mysql</td>
+<td>存储MySQL服务器正常运行所需要的各种信息（时区、主从、用户、权限等）</td>
+</tr>
+<tr>
+<td>information_schema</td>
+<td>提供了访问数据库元数据的各种表和视图，包含数据库、表、字段类型及访问权限等</td>
+</tr>
+<tr>
+<td>performance_schema</td>
+<td>为MySQL服务器运行时状态提供了一个底层监控功能，主要用于收集数据库服务器性能参数</td>
+</tr>
+</tbody></table>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>晗涩LV</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.handsomelv.top/2022/10/27/Database_Learn/MySQL/mysql_advanced/" title="MySQL进阶篇">https://www.handsomelv.top/2022/10/27/Database_Learn/MySQL/mysql_advanced/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/10/31/Database_Learn/MySQL/mysql_operations/" rel="prev" title="MySQL运维篇"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">MySQL运维篇</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/10/21/Database_Learn/MySQL/mysql_base/" rel="next" title="MySQL基础篇"><span class="post-nav-text">MySQL基础篇</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br><span>可以留下你的信息哦(支持匿名,也可以直接去Github_issues)😀😀😀</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/handsome-lv/handsome-lv.github.io/issues?q=is:issue+MySQL进阶篇">GitHub Issues</a></div><div id="valine-container"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js", () => {
+  const valineConfig = {"enable":true,"appId":"7FQHXArkO0B5lBLzBQV5VKYa-MdYXbMMI","appKey":"wOV2dJicWiDBYhdMunyHXwm5","placeholder":"说点儿什么吧(●'◡'●)","avatar":null,"pageSize":10,"visitor":false,"highlight":true,"recordIP":false,"enableQQ":true,"el":"#valine-container","lang":"zh-cn"}
+  valineConfig.path = "/2022/10/27/Database_Learn/MySQL/mysql_advanced/"
+  new Valine(valineConfig)
+}, window.Valine);</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 晗涩LV</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.2</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.8.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-04-22T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="想要搜些什么？" value=""></div><div id="local-search-result"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","5-22","12-13"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><div class="aplayer no-destroy" id="aplayer" data-id="7976504515" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay data-theme="#2980b9" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7" data-mutex data-lrctype="0" data-listfolded data-listmaxheight="340px" data-storagename="metingjs"></div></div></body></html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="theme-color" content="#0078E7"><meta name="author" content="晗涩LV"><meta name="copyright" content="晗涩LV"><meta name="generator" content="Hexo 5.4.2"><meta name="theme" content="hexo-theme-yun"><title>MySQL基础篇 | 晗涩LV的小站</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@900&amp;display=swap" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/star-markdown-css@0.2.4/dist/yun/yun-markdown.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-vars/base.css"><script src="//at.alicdn.com/t/font_1140697_dxory92pb0h.js" async></script><script src="https://cdn.jsdelivr.net/npm/@unocss/runtime/mini.global.js"></script><script src="https://cdn.jsdelivr.net/npm/scrollreveal/dist/scrollreveal.min.js" defer></script><script>function initScrollReveal() {
+  [".post-card",".markdown-body img"].forEach((target)=> {
+    ScrollReveal().reveal(target);
+  })
+}
+document.addEventListener("DOMContentLoaded", initScrollReveal);
+document.addEventListener("pjax:success", initScrollReveal);
+</script><script src="https://cdn.jsdelivr.net/npm/pjax@latest/pjax.min.js" defer></script><script src="/js/pjax.js" defer type="module"></script><script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script><link rel="icon" type="image/png" href="/favicon.ico"><link rel="mask-icon" href="/favicon.ico" color="#0078E7"><link rel="preload" href="/css/hexo-theme-yun.css" as="style"><link rel="prefetch" href="/js/sidebar.js" as="script"><link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin><script id="yun-config">
+    window.Yun = {}
+    window.CONFIG = {"hostname":"www.handsomelv.top","root":"/","title":"晗涩的小站","version":"1.8.11","mode":"auto","copycode":true,"page":{"isPost":true},"i18n":{"placeholder":"想要搜些什么？","empty":"找不到您查询的内容: ${query}","hits":"找到 ${hits} 条结果","hits_time":"找到 ${hits} 条结果（用时 ${time} 毫秒）"},"anonymous_image":"https://cdn.jsdelivr.net/gh/YunYouJun/cdn/img/avatar/none.jpg","say":{"api":"https://v1.hitokoto.cn","hitokoto":true},"local_search":{"path":"/search.xml"},"fireworks":{"colors":["160, 54, 176","33, 55, 184"]},"vendors":{"darken":"https://cdn.jsdelivr.net/npm/darken@1.5.0"}};
+  </script><link rel="stylesheet" href="/css/hexo-theme-yun.css"><script src="/js/hexo-theme-yun.js" type="module"></script><link rel="alternate" href="/atom.xml" title="晗涩LV的小站" type="application/atom+xml"><script src="/" async></script><script src="/j" async></script><script src="/s" async></script><script src="/" async></script><script src="/D" async></script><script src="/i" async></script><script src="/g" async></script><script src="/i" async></script><script src="/t" async></script><script src="/a" async></script><script src="/l" async></script><script src="/R" async></script><script src="/a" async></script><script src="/i" async></script><script src="/n" async></script><script src="/." async></script><script src="/j" async></script><script src="/s" async></script><script>(function(){
+  var bp = document.createElement('script');
+  var curProtocol = window.location.protocol.split(':')[0];
+  if (curProtocol === 'https') {
+    bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+  }
+  else {
+    bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+  }
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(bp, s);
+})();</script><meta name="description" content="数据类型数值类型  TINYINT 1bytes 小整数值 SMALLINT 2bytes 大整数值 MEDIUMINT 3bytes 大整数值 INT或INTEGER 4bytes 大整数值 BIGINT 8bytes 极大整数值 FLOAT 4bytes 单精度浮点数值 DOUBLE 8bytes 双精度浮点数值   字符串类型  CHAR 0-255 bytes 定长字符串 VARCHAR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL基础篇">
+<meta property="og:url" content="https://www.handsomelv.top/2022/10/21/Database_Learn/MySQL/mysql_base/index.html">
+<meta property="og:site_name" content="晗涩LV的小站">
+<meta property="og:description" content="数据类型数值类型  TINYINT 1bytes 小整数值 SMALLINT 2bytes 大整数值 MEDIUMINT 3bytes 大整数值 INT或INTEGER 4bytes 大整数值 BIGINT 8bytes 极大整数值 FLOAT 4bytes 单精度浮点数值 DOUBLE 8bytes 双精度浮点数值   字符串类型  CHAR 0-255 bytes 定长字符串 VARCHAR">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-21T07:23:40.000Z">
+<meta property="article:modified_time" content="2022-11-06T13:04:24.565Z">
+<meta property="article:author" content="晗涩LV">
+<meta property="article:tag" content="SQL">
+<meta name="twitter:card" content="summary"><script>(function() {
+  const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+  const setting = localStorage.getItem('darken-mode') || 'auto'
+  if (setting === 'dark' || (prefersDark && setting !== 'light'))
+    document.documentElement.classList.toggle('dark', true)
+})()</script></head><body><script defer src="https://cdn.jsdelivr.net/npm/animejs@latest"></script><script defer src="/js/ui/fireworks.js" type="module"></script><canvas class="fireworks"></canvas><div class="container"><a class="sidebar-toggle hty-icon-button" id="menu-btn"><div class="hamburger hamburger--spin" type="button"><span class="hamburger-box"><span class="hamburger-inner"></span></span></div></a><div class="sidebar-toggle sidebar-overlay"></div><aside class="sidebar"><script src="/js/sidebar.js" type="module"></script><ul class="sidebar-nav"><li class="sidebar-nav-item sidebar-nav-toc hty-icon-button sidebar-nav-active" data-target="post-toc-wrap" title="文章目录"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-list-ordered"></use></svg></li><li class="sidebar-nav-item sidebar-nav-overview hty-icon-button" data-target="site-overview-wrap" title="站点概览"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-passport-line"></use></svg></li></ul><div class="sidebar-panel" id="site-overview-wrap"><div class="site-info mickey-mouse"><a class="site-author-avatar" href="/about/" title="晗涩LV"><img width="96" loading="lazy" src="/images/avatar.jpg" alt="晗涩LV"><span class="site-author-status" title="Master sex.">🤨</span></a><div class="site-author-name"><a href="/about/">晗涩LV</a></div><a class="site-name" href="/about/site.html">晗涩LV的小站</a><sub class="site-subtitle"></sub><div class="site-desciption"></div></div><nav class="site-state"><a class="site-state-item hty-icon-button icon-home" href="/" title="主页"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-home-4-line"></use></svg></span></a><div class="site-state-item"><a href="/archives/" title="归档"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-archive-line"></use></svg></span><span class="site-state-item-count">36</span></a></div><div class="site-state-item"><a href="/categories/" title="分类"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-2-line"></use></svg></span><span class="site-state-item-count">5</span></a></div><div class="site-state-item"><a href="/tags/" title="标签"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="site-state-item-count">9</span></a></div><a class="site-state-item hty-icon-button" href="/albums/" title="相册"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-gallery-line"></use></svg></span></a></nav><hr style="margin-bottom:0.5rem"><div class="links-of-author"><a class="links-of-author-item hty-icon-button" rel="noopener" href="http://wpa.qq.com/msgrd?v=3&amp;uin=2775085562&amp;site=qq&amp;menu=yes" title="QQ 2775085562" target="_blank" style="color:#12B7F5"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-qq-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://github.com/handsome-lv" title="GitHub" target="_blank" style="color:#6e5494"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-github-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://weibo.com/7197970040" title="微博" target="_blank" style="color:#E6162D"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-weibo-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://space.bilibili.com/436910603" title="哔哩哔哩" target="_blank" style="color:#FF8EB3"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-bilibili-line"></use></svg></a><a class="links-of-author-item hty-icon-button" rel="noopener" href="https://twitter.com/HANDSME_L" title="Twitter" target="_blank" style="color:#1da1f2"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-twitter-line"></use></svg></a></div><hr style="margin:0.5rem 1rem"><div class="links"><a class="links-item hty-icon-button" href="/links/" title="友人帐" style="color:dodgerblue"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-genderless-line"></use></svg></a><a class="links-item hty-icon-button" href="/girls/" title="女孩子" style="color:HotPink"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-women-line"></use></svg></a><a class="links-item hty-icon-button" href="/tools/" title="在线工具" style="color:#00FF00"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-pushpin-line"></use></svg></a><a class="links-item hty-icon-button" href="/websites/" title="便捷网站" style="color:#DBA901"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-external-link-line"></use></svg></a></div><br><a class="links-item hty-icon-button" id="toggle-mode-btn" href="javascript:;" title="Mode" style="color: #f1cb64"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-contrast-2-line"></use></svg></a></div><div class="sidebar-panel sidebar-panel-active" id="post-toc-wrap"><div class="post-toc"><div class="post-toc-content"><ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">数据类型</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.1.</span> <span class="toc-text">数值类型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text">字符串类型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E6%97%B6%E9%97%B4%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">日期时间类型</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DDL-%E5%AE%9A%E4%B9%89%E6%93%8D%E4%BD%9C"><span class="toc-number">2.</span> <span class="toc-text">DDL 定义操作</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-number">2.1.</span> <span class="toc-text">数据库操作</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2"><span class="toc-number">2.1.1.</span> <span class="toc-text">查询</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA"><span class="toc-number">2.1.2.</span> <span class="toc-text">创建</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-number">2.1.3.</span> <span class="toc-text">删除</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8"><span class="toc-number">2.1.4.</span> <span class="toc-text">使用</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-number">2.2.</span> <span class="toc-text">表操作</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%BD%93%E5%89%8D%E6%95%B0%E6%8D%AE%E5%BA%93%E6%89%80%E6%9C%89%E8%A1%A8"><span class="toc-number">2.2.1.</span> <span class="toc-text">查询当前数据库所有表</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E8%A1%A8%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.2.</span> <span class="toc-text">查询表结构</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%8C%87%E5%AE%9A%E8%A1%A8%E7%9A%84%E5%BB%BA%E8%A1%A8%E8%AF%AD%E5%8F%A5"><span class="toc-number">2.2.3.</span> <span class="toc-text">查询指定表的建表语句</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA-1"><span class="toc-number">2.2.4.</span> <span class="toc-text">创建</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9"><span class="toc-number">2.2.5.</span> <span class="toc-text">修改</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E8%A1%A8"><span class="toc-number">2.2.6.</span> <span class="toc-text">删除表</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DML-%E6%95%B0%E6%8D%AE%E6%93%8D%E4%BD%9C"><span class="toc-number">3.</span> <span class="toc-text">DML 数据操作</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%A2%9E"><span class="toc-number">3.0.1.</span> <span class="toc-text">增</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0"><span class="toc-number">3.0.2.</span> <span class="toc-text">删</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%94%B9"><span class="toc-number">3.0.3.</span> <span class="toc-text">改</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DQL-%E6%95%B0%E6%8D%AE%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.</span> <span class="toc-text">DQL 数据查询</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.1.</span> <span class="toc-text">基本查询</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E5%A4%9A%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%88%AB%E5%90%8D"><span class="toc-number">4.1.1.</span> <span class="toc-text">查询多个字段别名</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%8E%BB%E9%99%A4%E9%87%8D%E5%A4%8D%E8%AE%B0%E5%BD%95"><span class="toc-number">4.1.2.</span> <span class="toc-text">去除重复记录</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.2.</span> <span class="toc-text">条件查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E5%87%BD%E6%95%B0"><span class="toc-number">4.3.</span> <span class="toc-text">聚合函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E7%BB%84%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.4.</span> <span class="toc-text">分组查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%8E%92%E5%BA%8F%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.5.</span> <span class="toc-text">排序查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E8%AF%A2"><span class="toc-number">4.6.</span> <span class="toc-text">分页查询</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#DCL%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="toc-number">5.</span> <span class="toc-text">DCL权限控制</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%AE%A1%E7%90%86%E7%94%A8%E6%88%B7"><span class="toc-number">5.1.</span> <span class="toc-text">管理用户</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E7%94%A8%E6%88%B7"><span class="toc-number">5.1.1.</span> <span class="toc-text">查询用户</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7"><span class="toc-number">5.1.2.</span> <span class="toc-text">创建用户</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E5%AF%86%E7%A0%81"><span class="toc-number">5.1.3.</span> <span class="toc-text">修改用户密码</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7"><span class="toc-number">5.1.4.</span> <span class="toc-text">删除用户</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%9D%83%E9%99%90%E6%8E%A7%E5%88%B6"><span class="toc-number">5.2.</span> <span class="toc-text">权限控制</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0"><span class="toc-number">6.</span> <span class="toc-text">函数</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%87%BD%E6%95%B0"><span class="toc-number">6.1.</span> <span class="toc-text">字符串函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%95%B0%E5%80%BC%E5%87%BD%E6%95%B0"><span class="toc-number">6.2.</span> <span class="toc-text">数值函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%97%A5%E6%9C%9F%E5%87%BD%E6%95%B0"><span class="toc-number">6.3.</span> <span class="toc-text">日期函数</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B%E5%87%BD%E6%95%B0"><span class="toc-number">6.4.</span> <span class="toc-text">流程函数</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BA%A6%E6%9D%9F"><span class="toc-number">7.</span> <span class="toc-text">约束</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%99%AE%E9%80%9A%E7%BA%A6%E6%9D%9F"><span class="toc-number">7.1.</span> <span class="toc-text">普通约束</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%A4%96%E9%94%AE%E7%BA%A6%E6%9D%9F"><span class="toc-number">7.2.</span> <span class="toc-text">外键约束</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.</span> <span class="toc-text">多表查询</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.1.</span> <span class="toc-text">连接查询</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5"><span class="toc-number">8.1.1.</span> <span class="toc-text">内连接</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="toc-number">8.1.2.</span> <span class="toc-text">外连接</span></a></li><li class="toc-item toc-level-6"><a class="toc-link" href="#%E8%87%AA%E8%BF%9E%E6%8E%A5"><span class="toc-number">8.1.3.</span> <span class="toc-text">自连接</span></a></li></ol></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.2.</span> <span class="toc-text">联合查询</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AD%90%E6%9F%A5%E8%AF%A2"><span class="toc-number">8.3.</span> <span class="toc-text">子查询</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-number">9.</span> <span class="toc-text">事务</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%93%8D%E4%BD%9C"><span class="toc-number">9.1.</span> <span class="toc-text">事务操作</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%9B%9B%E5%A4%A7%E7%89%B9%E6%80%A7"><span class="toc-number">9.2.</span> <span class="toc-text">事务四大特性</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E4%BA%8B%E5%8A%A1%E9%97%AE%E9%A2%98"><span class="toc-number">9.3.</span> <span class="toc-text">并发事务问题</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">9.4.</span> <span class="toc-text">事务隔离级别</span></a></li></ol></li></ol></div></div></div></aside><main class="sidebar-translate" id="content"><div id="post"><article class="hty-card post-block" itemscope itemtype="https://schema.org/Article" style="--smc-primary:#0078E7;"><link itemprop="mainEntityOfPage" href="https://www.handsomelv.top/2022/10/21/Database_Learn/MySQL/mysql_base/"><span hidden itemprop="author" itemscope itemtype="https://schema.org/Person"><meta itemprop="name" content="晗涩LV"><meta itemprop="description"></span><span hidden itemprop="publisher" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="晗涩LV的小站"></span><header class="post-header"><h1 class="post-title" itemprop="name headline">MySQL基础篇</h1><div class="post-meta"><div class="post-time" style="display:block"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-calendar-line"></use></svg></span> <time title="创建时间：2022-10-21 15:23:40" itemprop="dateCreated datePublished" datetime="2022-10-21T15:23:40+08:00">2022-10-21</time></div><span class="post-count"><span class="post-symbolcount"><span class="post-meta-item-icon" title="本文字数"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-file-word-line"></use></svg></span> <span title="本文字数">2.7k</span><span class="post-meta-divider">-</span><span class="post-meta-item-icon" title="阅读时长"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-timer-line"></use></svg></span> <span title="阅读时长">10m</span></span></span><div class="post-classify"><span class="post-category"> <span class="post-meta-item-icon" style="margin-right:3px;"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-folder-line"></use></svg></span><span itemprop="about" itemscope itemtype="https://schema.org/Thing"><a class="category-item" href="/categories/Out-Learn/" style="--text-color:#F5A9F2" itemprop="url" rel="index"><span itemprop="text">Out_Learn</span></a></span></span><span class="post-tag"><span class="post-meta-divider">-</span><a class="tag-item" href="/tags/SQL/" style="--text-color:#F4645F"><span class="post-meta-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-price-tag-3-line"></use></svg></span><span class="tag-name">SQL</span></a></span></div></div></header><section class="post-body" itemprop="articleBody"><div class="post-content markdown-body"><h4 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h4><h5 id="数值类型"><a href="#数值类型" class="headerlink" title="数值类型"></a>数值类型</h5><blockquote>
+<ul>
+<li>TINYINT 1bytes 小整数值</li>
+<li>SMALLINT 2bytes 大整数值</li>
+<li>MEDIUMINT 3bytes 大整数值</li>
+<li>INT或INTEGER 4bytes 大整数值</li>
+<li>BIGINT 8bytes 极大整数值</li>
+<li>FLOAT 4bytes 单精度浮点数值</li>
+<li>DOUBLE 8bytes 双精度浮点数值</li>
+</ul>
+</blockquote>
+<h5 id="字符串类型"><a href="#字符串类型" class="headerlink" title="字符串类型"></a>字符串类型</h5><blockquote>
+<ul>
+<li>CHAR 0-255 bytes 定长字符串</li>
+<li>VARCHAR 0-65535 bytes 变长字符串</li>
+<li>TINYBLOB 0-255 bytes 不超过255个字符的二进制数据</li>
+<li>TINYTEXT 0-255 bytes 短文本字符串</li>
+<li>BLOB 0-65 535 bytes 二进制形式的长文本数据</li>
+<li>TEXT 0-65 535 bytes 长文本数据</li>
+<li>MEDIUMBLOB 0-16 777 215 bytes 二进制形式的中等长度文本数据</li>
+<li>MEDIUMTEXT 0-16 777 215 bytes 中等长度文本数据</li>
+<li>LONGBLOB 0-4 294 967 295 bytes 二进制形式的极大文本数据</li>
+<li>LONGTEXT 0-4 294 967 295 bytes 极大文本数据</li>
+</ul>
+</blockquote>
+<h5 id="日期时间类型"><a href="#日期时间类型" class="headerlink" title="日期时间类型"></a>日期时间类型</h5><table>
+<thead>
+<tr>
+<th>类型</th>
+<th>大小</th>
+<th>范围</th>
+<th>格式</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DATE</td>
+<td>3</td>
+<td>1000-01-01至9999-12-31</td>
+<td>YYYY:MM:DD</td>
+<td>日期值</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>3</td>
+<td>-838：59：59至838：59：59</td>
+<td>HH:MM:SS</td>
+<td>时间值或持续时间</td>
+</tr>
+<tr>
+<td>YEAR</td>
+<td>1</td>
+<td>1901至2155</td>
+<td>YYYY</td>
+<td>年份值</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>8</td>
+<td>1000-01-01 00：00：00至9999-12-31 23：59：59</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>混合日期和时间值</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>4</td>
+<td>1970-01-01 00：00：01至2038-01-19 03：14：07</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>混合日期和时间值，时间戳</td>
+</tr>
+</tbody></table>
+<h4 id="DDL-定义操作"><a href="#DDL-定义操作" class="headerlink" title="DDL 定义操作"></a>DDL 定义操作</h4><h5 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h5><h6 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h6><blockquote>
+<p>SHOW DATABASES;</p>
+<p>SHOW DATABASE();</p>
+</blockquote>
+<h6 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h6><blockquote>
+<p>CREATE DATABASE [IF NOT EXISTS] 数据库名 [DEFAULT CHARSET 字符集] [COLLATE 排序规则];</p>
+</blockquote>
+<h6 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h6><blockquote>
+<p>DROP DATABASE [IF EXISTS] 数据库名;</p>
+</blockquote>
+<h6 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h6><blockquote>
+<p>USE 数据库名;</p>
+</blockquote>
+<h5 id="表操作"><a href="#表操作" class="headerlink" title="表操作"></a>表操作</h5><h6 id="查询当前数据库所有表"><a href="#查询当前数据库所有表" class="headerlink" title="查询当前数据库所有表"></a>查询当前数据库所有表</h6><blockquote>
+<p>SHOW TABLES;</p>
+</blockquote>
+<h6 id="查询表结构"><a href="#查询表结构" class="headerlink" title="查询表结构"></a>查询表结构</h6><blockquote>
+<p>DESC 表名;</p>
+</blockquote>
+<h6 id="查询指定表的建表语句"><a href="#查询指定表的建表语句" class="headerlink" title="查询指定表的建表语句"></a>查询指定表的建表语句</h6><blockquote>
+<p>SHOW CREATE TABLE 表名;</p>
+</blockquote>
+<h6 id="创建-1"><a href="#创建-1" class="headerlink" title="创建"></a>创建</h6><blockquote>
+<p>CREATE TABLE 表名(</p>
+<p>字段1 字段1类型 [COMMENT 字段1注释],</p>
+<p>字段n 字段n类型 [COMMENT 字段n注释]</p>
+<p>) [COMMENT 表注释];</p>
+</blockquote>
+<h6 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h6><blockquote>
+<p>添加字段</p>
+<p>ALTER TABLE 表名 ADD 字段名 类型(长度) [COMMENT 注释] [约束];</p>
+</blockquote>
+<blockquote>
+<p>修改数据类型</p>
+<p>ALTER TABLE 表名 MODIFY 字段名 新数据类型(长度);</p>
+</blockquote>
+<blockquote>
+<p>修改字段名和字段类型</p>
+<p>ALTER TABLE 表名 CHANGE 旧字段名 类型(长度) [COMMENT 注释] [约束];</p>
+</blockquote>
+<blockquote>
+<p>删除字段</p>
+<p>ALTER TABLE 表名 DROP 字段名;</p>
+</blockquote>
+<blockquote>
+<p>修改表名</p>
+<p>ALTER TABLE 表名 RENAME TO 新表名;</p>
+</blockquote>
+<h6 id="删除表"><a href="#删除表" class="headerlink" title="删除表"></a>删除表</h6><blockquote>
+<p>DROP TABLE [IF EXISTS] 表名;</p>
+<p>删除指定表，并重新创建该表</p>
+<p>TRUNCATE TABLE 表名;</p>
+</blockquote>
+<h4 id="DML-数据操作"><a href="#DML-数据操作" class="headerlink" title="DML 数据操作"></a>DML 数据操作</h4><h6 id="增"><a href="#增" class="headerlink" title="增"></a>增</h6><blockquote>
+<p>给指定字段添加数据</p>
+<p>INSERT INTO 表名（字段名1，字段名2，…）VALUES (值1，值2，…);</p>
+</blockquote>
+<blockquote>
+<p>给全部字段添加数据</p>
+<p>INSERT INTO 表名 VALUES(值1，值2);</p>
+</blockquote>
+<blockquote>
+<p>批量添加数据</p>
+<p>INSERT INTO 表名（字段名1，字段名2）VALUES (值1，值2),(值1，值2);</p>
+<p>INSERT INTO 表名 VALUES (值1，值2)，(值1，值2);</p>
+</blockquote>
+<h6 id="删"><a href="#删" class="headerlink" title="删"></a>删</h6><blockquote>
+<p>DELETE FROM 表名 [WHERE 条件];</p>
+</blockquote>
+<h6 id="改"><a href="#改" class="headerlink" title="改"></a>改</h6><blockquote>
+<p>UPDATE 表名 SET 字段名1=值1，字段名2=值2，…[WHERE 条件];</p>
+</blockquote>
+<h4 id="DQL-数据查询"><a href="#DQL-数据查询" class="headerlink" title="DQL 数据查询"></a>DQL 数据查询</h4><blockquote>
+<p>SELECT    字段列表</p>
+<p>FROM    表名列表</p>
+<p>WHERE    条件列表</p>
+<p>GROUP BY    分组字段列表</p>
+<p>HAVING    分组后条件列表</p>
+<p>ORDER BY    排序字段列表</p>
+<p>LIMIT    分页参数</p>
+</blockquote>
+<h5 id="基本查询"><a href="#基本查询" class="headerlink" title="基本查询"></a>基本查询</h5><h6 id="查询多个字段别名"><a href="#查询多个字段别名" class="headerlink" title="查询多个字段别名"></a>查询多个字段别名</h6><blockquote>
+<p>SELECT 字段 [AS 别名] FROM 表名</p>
+<p>SELECT * FROM 表名</p>
+</blockquote>
+<h6 id="去除重复记录"><a href="#去除重复记录" class="headerlink" title="去除重复记录"></a>去除重复记录</h6><blockquote>
+<p>SELECT DISTINCT 字段列表 FROM 表名;</p>
+</blockquote>
+<h5 id="条件查询"><a href="#条件查询" class="headerlink" title="条件查询"></a>条件查询</h5><blockquote>
+<p>SELECT 字段列表 FROM 表名 WHERE 条件列表;</p>
+<p>条件：</p>
+<ul>
+<li>BETWEEN … AND …    在某个范围之内[]</li>
+<li>IN(…)    在in之后的列表中的值，多选一</li>
+<li>LIKE 占位符    模糊匹配(__匹配单个字符，%匹配任意个字符)</li>
+<li>IS NULL    是NULL</li>
+</ul>
+</blockquote>
+<h5 id="聚合函数"><a href="#聚合函数" class="headerlink" title="聚合函数"></a>聚合函数</h5><blockquote>
+<p>将一列数据作为整体进行纵向计算</p>
+<ul>
+<li>count max min avg sum </li>
+</ul>
+<p>SELECT 聚合函数(字段列表) FROM 表名;</p>
+</blockquote>
+<h5 id="分组查询"><a href="#分组查询" class="headerlink" title="分组查询"></a>分组查询</h5><blockquote>
+<p>SELECT 字段列表 FROM 表名 [WHERE 条件] GROUP BY 分组字段名 [HAVING 分组后过滤条件];</p>
+<p>where和having不同</p>
+<ul>
+<li>执行时机不同：where是分组之前进行过滤，不满足where条件，不参与分组；而having是分组之后对结果进行过滤。</li>
+<li>判断条件不同：where不能对聚合函数进行判断，having可以</li>
+</ul>
+</blockquote>
+<h5 id="排序查询"><a href="#排序查询" class="headerlink" title="排序查询"></a>排序查询</h5><blockquote>
+<p>SELECT 字段列表 FROM 表名 ORDER BY 字段1 排序方式1，字段2 排序方式2;</p>
+<p>排序方式</p>
+<ul>
+<li>ASC：升序（默认）</li>
+<li>DESC：降序</li>
+</ul>
+</blockquote>
+<h5 id="分页查询"><a href="#分页查询" class="headerlink" title="分页查询"></a>分页查询</h5><blockquote>
+<p>SELECT 字段列表 FROM 表名 LIMIT 起始索引，查询记录数;</p>
+</blockquote>
+<h4 id="DCL权限控制"><a href="#DCL权限控制" class="headerlink" title="DCL权限控制"></a>DCL权限控制</h4><h5 id="管理用户"><a href="#管理用户" class="headerlink" title="管理用户"></a>管理用户</h5><h6 id="查询用户"><a href="#查询用户" class="headerlink" title="查询用户"></a>查询用户</h6><blockquote>
+<p>USE mysql;</p>
+<p>SELECT * FROM user;</p>
+</blockquote>
+<h6 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h6><blockquote>
+<p>CREATE USER ‘用户名‘@’主机名’ IDENTIFIED BY ‘密码’;</p>
+</blockquote>
+<h6 id="修改用户密码"><a href="#修改用户密码" class="headerlink" title="修改用户密码"></a>修改用户密码</h6><blockquote>
+<p>ALTER USER ‘用户名‘@’主机名’ IDENTIFIED WITH mysql_native_password BY ‘新密码’;</p>
+</blockquote>
+<h6 id="删除用户"><a href="#删除用户" class="headerlink" title="删除用户"></a>删除用户</h6><blockquote>
+<p>DROP USER ‘用户名‘@’主机名’;</p>
+</blockquote>
+<h5 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h5><blockquote>
+<p>查询权限：</p>
+<p>SHOW GRANTS FOR ‘用户名‘@’主机名’;</p>
+<p>授予权限:</p>
+<p>GRANT 权限列表 ON 数据库名.表名 TO ’用户名‘@’主机名‘；</p>
+<p>撤销权限：</p>
+<p>REVOKE 权限列表 ON 数据库名.表名 FROM ’用户名‘@’主机名‘；</p>
+</blockquote>
+<h4 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h4><blockquote>
+<p>函数指一段可以直接被另一段程序调用的程序或代码</p>
+</blockquote>
+<h5 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h5><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CONCAT(S1,S2,…Sn)</td>
+<td>字符串拼接</td>
+</tr>
+<tr>
+<td>LOWER(str)</td>
+<td>转小写</td>
+</tr>
+<tr>
+<td>UPPER(str)</td>
+<td>转大写</td>
+</tr>
+<tr>
+<td>LPAD(str,n,pad)</td>
+<td>左填充</td>
+</tr>
+<tr>
+<td>RPAD(str,n,pad)</td>
+<td>右填充</td>
+</tr>
+<tr>
+<td>TRIM(str)</td>
+<td>去空格</td>
+</tr>
+<tr>
+<td>SUBSTRING(str,start,len)</td>
+<td>裁剪返回</td>
+</tr>
+</tbody></table>
+<h5 id="数值函数"><a href="#数值函数" class="headerlink" title="数值函数"></a>数值函数</h5><blockquote>
+<ul>
+<li>ceil(x)：向上取整</li>
+<li>floor(x)：向下取整</li>
+<li>mod(x,y)：返回x/y的模</li>
+<li>rand()：返回0-1随机数</li>
+<li>round(x,y)：求参数x的四舍五入值，保留y位小数</li>
+</ul>
+</blockquote>
+<h5 id="日期函数"><a href="#日期函数" class="headerlink" title="日期函数"></a>日期函数</h5><blockquote>
+<ul>
+<li>curdate()：返回当前日期</li>
+<li>curtime()：返回当前时间</li>
+<li>now()：返回当前日期和时间</li>
+<li>year(date)：获取指定date的年份</li>
+<li>month(date)：获取指定date的月份</li>
+<li>day(date)：获取指定date的日期</li>
+<li>date_add(date,INTERVAL expr type)：返回一个日期/时间值加上一个时间间隔expr后的时间值</li>
+<li>datediff(date1,date2)：返回起始时间date1和结束时间date2之间的天数</li>
+</ul>
+</blockquote>
+<h5 id="流程函数"><a href="#流程函数" class="headerlink" title="流程函数"></a>流程函数</h5><blockquote>
+<ul>
+<li>if(value,t,f)：true返回t，否则f</li>
+<li>ifnull(value1,value2)：value1不为空返回value1，否则value2</li>
+<li>CASE WHEN [val1] THEN [res1] … ELSE [default] END：如果val1为true，返回res1，… 否则返回default默认值</li>
+<li>CASE [expr] WHEN [val1] THEN [res1] … ELSE [default] END：如果expr的值等于val1，返回res1，… 否则返回default默认值</li>
+</ul>
+</blockquote>
+<h4 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h4><h5 id="普通约束"><a href="#普通约束" class="headerlink" title="普通约束"></a>普通约束</h5><blockquote>
+<ul>
+<li><p>概念：约束是作用于表中字段上的规则，用于限制存储在表中的数据</p>
+</li>
+<li><p>目的：保证数据库中数据的正确、有效性和完整性</p>
+</li>
+<li><table>
+<thead>
+<tr>
+<th>约束</th>
+<th>描述</th>
+<th>关键字</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>非空约束</td>
+<td>限制该字段的数据不能为null</td>
+<td>NOT NULL</td>
+</tr>
+<tr>
+<td>唯一约束</td>
+<td>保证该字段的所有数据都是唯一、不重复</td>
+<td>UNIQUE</td>
+</tr>
+<tr>
+<td>主键约束</td>
+<td>主键是一行数据的唯一标识，要求非空且唯一</td>
+<td>PRIMARY KEY</td>
+</tr>
+<tr>
+<td>默认约束</td>
+<td>保存数据时，如果未指定该字段的值，则采用默认值</td>
+<td>DEFAULT</td>
+</tr>
+<tr>
+<td>检查约束</td>
+<td>保证字段值满足某一个条件</td>
+<td>CHECHK</td>
+</tr>
+<tr>
+<td>外键约束</td>
+<td>用来让两张表的数据之间建立连接，保证数据的一致性和完整性</td>
+<td>FOREIGN KEY</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>auto_increment：自动增长</p>
+</li>
+</ul>
+</blockquote>
+<h5 id="外键约束"><a href="#外键约束" class="headerlink" title="外键约束"></a>外键约束</h5><blockquote>
+<p>外键用来让两张表的数据之间建立连接，从而保证数据的一致性和完整性</p>
+</blockquote>
+<blockquote>
+<p>添加外键</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">create</span> <span class="token keyword">table</span> 表名<span class="token punctuation">(</span>
+ 字段名 数据类型<span class="token punctuation">,</span>
+
+ <span class="token punctuation">[</span>constrain<span class="token punctuation">]</span> <span class="token punctuation">[</span>外键名称<span class="token punctuation">]</span> <span class="token keyword">foreign</span> <span class="token keyword">key</span><span class="token punctuation">(</span>外键字段名<span class="token punctuation">)</span> <span class="token keyword">references</span> 主表<span class="token punctuation">(</span>主表列名<span class="token punctuation">)</span>
+<span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">alter</span> <span class="token keyword">table</span> 表名 <span class="token keyword">add</span> constrain 外键名称 <span class="token keyword">foreign</span> <span class="token keyword">key</span><span class="token punctuation">(</span>外键字段名<span class="token punctuation">)</span> <span class="token keyword">references</span> 主表<span class="token punctuation">(</span>主表列表<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p>删除外键</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">alter</span> <span class="token keyword">table</span> 表名 <span class="token keyword">drop</span> <span class="token keyword">foreign</span> <span class="token keyword">key</span> 外键名称<span class="token punctuation">;</span></code></pre>
+</blockquote>
+<blockquote>
+<p>删除更新</p>
+<ul>
+<li>no action / restrict：拥有外键不予更新</li>
+<li>cascade：级联</li>
+<li>set null：拥有外键，外键值取null</li>
+<li>set default：父表变更，外键列设置为默认值(Innodb不支持)</li>
+</ul>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">alter</span> <span class="token keyword">table</span> 表名 <span class="token keyword">add</span> constrain 外键名称 <span class="token keyword">foreign</span> <span class="token keyword">key</span> <span class="token punctuation">(</span>外键字段<span class="token punctuation">)</span> <span class="token keyword">references</span> 主表名<span class="token punctuation">(</span>主表字段名<span class="token punctuation">)</span> <span class="token keyword">on</span> <span class="token keyword">update</span> <span class="token keyword">cascade</span> <span class="token keyword">on</span> <span class="token keyword">delete</span> <span class="token keyword">cascade</span><span class="token punctuation">;</span></code></pre>
+
+
+</blockquote>
+<h4 id="多表查询"><a href="#多表查询" class="headerlink" title="多表查询"></a>多表查询</h4><blockquote>
+<ul>
+<li>连接查询<ul>
+<li>内连接：相当于查询A，B交集部分数据</li>
+<li>外连接：<ul>
+<li>左外连接：查询左表以及交集数据</li>
+<li>右外连接：查询右表以及交集数据</li>
+</ul>
+</li>
+<li>自连接：当前表与自身的连接查询，自连接必须使用表别名</li>
+</ul>
+</li>
+<li>子查询</li>
+</ul>
+</blockquote>
+<h5 id="连接查询"><a href="#连接查询" class="headerlink" title="连接查询"></a>连接查询</h5><h6 id="内连接"><a href="#内连接" class="headerlink" title="内连接"></a>内连接</h6><blockquote>
+<p>隐式：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表<span class="token number">1</span><span class="token punctuation">,</span>表<span class="token number">2</span> <span class="token keyword">where</span> 条件<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+
+<p>显式：</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表<span class="token number">1</span> <span class="token punctuation">[</span><span class="token keyword">inner</span><span class="token punctuation">]</span> <span class="token keyword">join</span> 表<span class="token number">2</span> <span class="token keyword">on</span> 连接条件<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+</blockquote>
+<h6 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h6><blockquote>
+<p>左/右外连接</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表<span class="token number">1</span> <span class="token keyword">left</span> <span class="token punctuation">[</span><span class="token keyword">outer</span><span class="token punctuation">]</span> <span class="token keyword">join</span> 表<span class="token number">2</span> <span class="token keyword">on</span> 条件<span class="token punctuation">;</span></code></pre>
+
+<p>查询包含左右表以及交集数据</p>
+</blockquote>
+<h6 id="自连接"><a href="#自连接" class="headerlink" title="自连接"></a>自连接</h6><blockquote>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表<span class="token number">1</span> 别名<span class="token number">1</span> <span class="token keyword">join</span> 表<span class="token number">1</span> 别名<span class="token number">2</span> <span class="token keyword">on</span> 条件<span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span> </code></pre>
+
+<p>自连接查询，可以是内连接也可以是外连接</p>
+</blockquote>
+<h5 id="联合查询"><a href="#联合查询" class="headerlink" title="联合查询"></a>联合查询</h5><blockquote>
+<p>对于union查询，就是把多次查询结果结合起来，形成一个新的查询结果集</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表<span class="token number">1</span>
+<span class="token keyword">union</span> <span class="token punctuation">[</span><span class="token keyword">all</span><span class="token punctuation">]</span>
+<span class="token keyword">select</span> 字段列表 <span class="token keyword">from</span> 表<span class="token number">2</span><span class="token punctuation">;</span></code></pre>
+
+<ul>
+<li>对于联合查询的多张表的列数必须保持一致，字段类型也需保持一致</li>
+<li>union all 会将全部的数据直接合并一起，union会对合并的数据去重</li>
+</ul>
+</blockquote>
+<h5 id="子查询"><a href="#子查询" class="headerlink" title="子查询"></a>子查询</h5><blockquote>
+<ul>
+<li>概念：SQL语句中嵌套SELECT语句，又称为嵌套查询、</li>
+</ul>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> <span class="token operator">*</span> <span class="token keyword">from</span> t1 <span class="token keyword">where</span> column1<span class="token operator">=</span> <span class="token punctuation">(</span><span class="token keyword">select</span> column1 <span class="token keyword">from</span> t2<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+
+<p>子查询外部的语句可以是增删改查任何一个</p>
+<ul>
+<li>根据子查询结果不同，分为：</li>
+<li>标量子查询（查询结果为单个值）</li>
+<li>列子查询（查询结果为一列）</li>
+<li>行子查询（查询结果为一行）</li>
+<li>表字查询（查询结果为多行多列）</li>
+</ul>
+</blockquote>
+<h4 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h4><blockquote>
+<p>事务是一组操作集合，不可分割的工作单位，事务会把所有操作作为一个整体一起向系统提交或撤销操作请求，即这些操作要么同时成功，要么同时失败</p>
+</blockquote>
+<h5 id="事务操作"><a href="#事务操作" class="headerlink" title="事务操作"></a>事务操作</h5><blockquote>
+<ul>
+<li><p>查看/设置事务提交方式</p>
+</li>
+<li><p>```sql<br>  select @@autocommit;<br>  set @@autocommit=0;</p>
+  <pre class="language-none"><code class="language-none">
+- 提交事务
+
+- &#96;&#96;&#96;sql
+	commit;</code></pre></li>
+<li><p>回滚事务</p>
+</li>
+<li><p>```sql<br>  rollback;</p>
+  <pre class="language-none"><code class="language-none">
+- 开启事务
+
+- &#96;&#96;&#96;sql
+	start transaction 或 begin;</code></pre></li>
+</ul>
+</blockquote>
+<h5 id="事务四大特性"><a href="#事务四大特性" class="headerlink" title="事务四大特性"></a>事务四大特性</h5><blockquote>
+<ul>
+<li>原子性（Atomicity）：事务是不可分割的最小操作单元，要么全部成功，要么全部失败</li>
+<li>一致性（Consistency）：事务完成时，必须所有的数据都保持一致状态</li>
+<li>隔离性（Isolation）：数据库系统提供的隔离机制，保证事务在不受外部并发操作影响的独立环境下运行</li>
+<li>持久性（Durability）：事务一旦提交或回滚，它对数据库中的数据的改变就是永久的</li>
+</ul>
+</blockquote>
+<h5 id="并发事务问题"><a href="#并发事务问题" class="headerlink" title="并发事务问题"></a>并发事务问题</h5><blockquote>
+<ul>
+<li>脏读：一个事务读到另一个事务还没有提交的数据</li>
+<li>不可重复读：一个事务先后读取同一条记录，但两次读取的数据不同，称之为不可重复读</li>
+<li>幻读：一个事务按照条件查询数据时，没有对应的数据行，但是在插入数据时，又发现该行数据已存在，好像出现幻影</li>
+</ul>
+</blockquote>
+<h5 id="事务隔离级别"><a href="#事务隔离级别" class="headerlink" title="事务隔离级别"></a>事务隔离级别</h5><blockquote>
+<table>
+<thead>
+<tr>
+<th>隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Read uncommitted</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>Read committed</td>
+<td>×</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>Repeatable Read(默认)</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>Serializable</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+</tr>
+</tbody></table>
+<p>查看事务隔离级别</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">select</span> @<span class="token variable">@transaction_isolation</span><span class="token punctuation">;</span></code></pre>
+
+<p>设置事务隔离级别</p>
+<pre class="language-sql" data-language="sql"><code class="language-sql"><span class="token keyword">set</span> <span class="token punctuation">[</span><span class="token keyword">session</span><span class="token operator">|</span><span class="token keyword">global</span><span class="token punctuation">]</span> <span class="token keyword">transaction</span> <span class="token keyword">isolation</span> <span class="token keyword">level</span> <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">;</span></code></pre>
+
+</blockquote>
+</div></section><ul class="post-copyright"><li class="post-copyright-author"><strong>本文作者：</strong>晗涩LV</li><li class="post-copyright-link"><strong>本文链接：</strong><a href="https://www.handsomelv.top/2022/10/21/Database_Learn/MySQL/mysql_base/" title="MySQL基础篇">https://www.handsomelv.top/2022/10/21/Database_Learn/MySQL/mysql_base/</a></li><li class="post-copyright-license"><strong>版权声明：</strong>本博客所有文章除特别声明外，均默认采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank" rel="noopener" title="CC BY-NC-SA 4.0 "><svg class="icon"><use xlink:href="#icon-creative-commons-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-by-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-nc-line"></use></svg><svg class="icon"><use xlink:href="#icon-creative-commons-sa-line"></use></svg></a> 许可协议。</li></ul></article><div class="post-nav"><div class="post-nav-item"><a class="post-nav-prev" href="/2022/10/27/Database_Learn/MySQL/mysql_advanced/" rel="prev" title="MySQL进阶篇"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-left-s-line"></use></svg><span class="post-nav-text">MySQL进阶篇</span></a></div><div class="post-nav-item"><a class="post-nav-next" href="/2022/10/13/Java_Learn/Review/Maven/" rel="next" title="Maven基础"><span class="post-nav-text">Maven基础</span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-right-s-line"></use></svg></a></div></div></div><div class="hty-card" id="comment"><div class="comment-tooltip text-center"><span>要不要和我说些什么？</span><br><span>可以留下你的信息哦(支持匿名,也可以直接去Github_issues)😀😀😀</span><br><a class="hty-button hty-button--raised" id="github-issues" target="_blank" rel="noopener" href="https://github.com/handsome-lv/handsome-lv.github.io/issues?q=is:issue+MySQL基础篇">GitHub Issues</a></div><div id="valine-container"></div><script>Yun.utils.getScript("https://cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js", () => {
+  const valineConfig = {"enable":true,"appId":"7FQHXArkO0B5lBLzBQV5VKYa-MdYXbMMI","appKey":"wOV2dJicWiDBYhdMunyHXwm5","placeholder":"说点儿什么吧(●'◡'●)","avatar":null,"pageSize":10,"visitor":false,"highlight":true,"recordIP":false,"enableQQ":true,"el":"#valine-container","lang":"zh-cn"}
+  valineConfig.path = "/2022/10/21/Database_Learn/MySQL/mysql_base/"
+  new Valine(valineConfig)
+}, window.Valine);</script></div></main><footer class="sidebar-translate" id="footer"><div class="copyright"><span>&copy; 2021 – 2022 </span><span class="with-love" id="animate"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-cloud-line"></use></svg></span><span class="author"> 晗涩LV</span></div><div class="powered"><span>由 <a href="https://hexo.io" target="_blank" rel="noopener">Hexo</a> 驱动 v5.4.2</span><span class="footer-separator">|</span><span>主题 - <a rel="noopener" href="https://github.com/YunYouJun/hexo-theme-yun" target="_blank"><span>Yun</span></a> v1.8.11</span></div><div class="live-time"><span>本博客已萌萌哒地运行</span><span id="display_live_time"></span><span class="moe-text">(●'◡'●)</span><script>function blog_live_time() {
+  setTimeout(blog_live_time, 1000);
+  const start = new Date('2021-04-22T00:00:00');
+  const now = new Date();
+  const timeDiff = (now.getTime() - start.getTime());
+  const msPerMinute = 60 * 1000;
+  const msPerHour = 60 * msPerMinute;
+  const msPerDay = 24 * msPerHour;
+  const passDay = Math.floor(timeDiff / msPerDay);
+  const passHour = Math.floor((timeDiff % msPerDay) / 60 / 60 / 1000);
+  const passMinute = Math.floor((timeDiff % msPerHour) / 60 / 1000);
+  const passSecond = Math.floor((timeDiff % msPerMinute) / 1000);
+  display_live_time.innerHTML = ` ${passDay} 天 ${passHour} 小时 ${passMinute} 分 ${passSecond} 秒`;
+}
+blog_live_time();
+</script></div><div id="busuanzi"><span id="busuanzi_container_site_uv" title="总访客量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-user-line"></use></svg></span><span id="busuanzi_value_site_uv"></span></span><span class="footer-separator">|</span><span id="busuanzi_container_site_pv" title="总访问量"><span><svg class="icon" aria-hidden="true"><use xlink:href="#icon-eye-line"></use></svg></span><span id="busuanzi_value_site_pv"></span></span><script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></footer><a class="hty-icon-button" id="back-to-top" aria-label="back-to-top" href="#"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-arrow-up-s-line"></use></svg><svg class="progress-circle-container" viewBox="0 0 100 100"><circle class="progress-circle" id="progressCircle" cx="50" cy="50" r="48" fill="none" stroke="#0078E7" stroke-width="2" stroke-linecap="round"></circle></svg></a><a class="popup-trigger hty-icon-button icon-search" id="search" href="javascript:;" title="搜索"><span class="site-state-item-icon"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-search-line"></use></svg></span></a><script>window.addEventListener("DOMContentLoaded", () => {
+  // Handle and trigger popup window
+  document.querySelector(".popup-trigger").addEventListener("click", () => {
+    document.querySelector(".popup").classList.add("show");
+    setTimeout(() => {
+      document.querySelector(".search-input").focus();
+    }, 100);
+  });
+
+  // Monitor main search box
+  const onPopupClose = () => {
+    document.querySelector(".popup").classList.remove("show");
+  };
+
+  document.querySelector(".popup-btn-close").addEventListener("click", () => {
+    onPopupClose();
+  });
+
+  window.addEventListener("keyup", event => {
+    if (event.key === "Escape") {
+      onPopupClose();
+    }
+  });
+});
+</script><script src="/js/search/local-search.js" defer type="module"></script><div class="popup search-popup"><div class="search-header"><span class="popup-btn-close close-icon hty-icon-button"><svg class="icon" aria-hidden="true"><use xlink:href="#icon-close-line"></use></svg></span></div><div class="search-input-container"><input class="search-input" id="local-search-input" type="text" placeholder="想要搜些什么？" value=""></div><div id="local-search-result"></div></div><script>function initMourn() {
+  const date = new Date();
+  const today = (date.getMonth() + 1) + "-" + date.getDate()
+  const mourn_days = ["4-4","9-18","5-22","12-13"]
+  if (mourn_days.includes(today)) {
+    document.documentElement.style.filter = "grayscale(1)";
+  }
+}
+initMourn();</script><div class="aplayer no-destroy" id="aplayer" data-id="7976504515" data-server="tencent" data-type="playlist" data-fixed="true" data-autoplay data-theme="#2980b9" data-loop="all" data-order="random" data-preload="auto" data-volume="0.7" data-mutex data-lrctype="0" data-listfolded data-listmaxheight="340px" data-storagename="metingjs"></div></div></body></html>
